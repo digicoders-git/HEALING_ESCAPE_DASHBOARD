@@ -58,7 +58,7 @@ const Dashboard = () => {
         Swal.fire(
           "Logged Out!",
           "You have been logged out successfully.",
-          "success"
+          "success",
         );
       }
     });
@@ -432,7 +432,7 @@ const Dashboard = () => {
               }
               style={{ color: colors.primary }}
             >
-              <Settings className="w-5 h-5 md:w-6 md:h-6" />
+              {/* <Settings className="w-5 h-5 md:w-6 md:h-6" /> */}
             </button>
             {/* <div className='w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center'
                  style={{ backgroundColor: colors.accent }}>
@@ -514,8 +514,8 @@ const Dashboard = () => {
                           ? "#000000"
                           : "#ffffff"
                         : isDarkMode
-                        ? "#ffffff"
-                        : "#000000",
+                          ? "#ffffff"
+                          : "#000000",
                   }}
                 ></div>
               </button>
