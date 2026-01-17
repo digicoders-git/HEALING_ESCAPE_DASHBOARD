@@ -34,6 +34,7 @@ const Doctor = () => {
   });
   const [specialityList, setSpecialityList] = useState([]);
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     fetchSpecialities();
@@ -111,6 +112,7 @@ const Doctor = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
+          setDeletingId(id);
           await deleteDoctor(id);
           Swal.fire({
             title: "Deleted!",
@@ -128,6 +130,8 @@ const Doctor = () => {
             background: colors.background,
             color: colors.text,
           });
+        } finally {
+          setDeletingId(null);
         }
       }
     });
@@ -397,10 +401,15 @@ const Doctor = () => {
                       </button>
                       <button
                         onClick={() => handleDelete(item._id)}
-                        className="p-2 rounded hover:bg-red-100 text-red-600 transition-colors cursor-pointer"
+                        disabled={deletingId === item._id}
+                        className="p-2 rounded hover:bg-red-100 text-red-600 transition-colors cursor-pointer disabled:opacity-50"
                         title="Delete"
                       >
-                        <MdDelete size={18} />
+                        {deletingId === item._id ? (
+                          <Loader size={18} color="#dc2626" />
+                        ) : (
+                          <MdDelete size={18} />
+                        )}
                       </button>
                     </div>
                   </td>
@@ -460,7 +469,7 @@ const Doctor = () => {
                 >
                   {pageNum}
                 </button>
-              )
+              ),
             )}
             <button
               disabled={pagination.page === totalPages}

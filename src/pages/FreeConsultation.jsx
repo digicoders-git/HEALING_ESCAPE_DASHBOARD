@@ -25,13 +25,24 @@ const FreeConsultation = () => {
     country: "",
     city: "",
   });
+  const [deletingId, setDeletingId] = useState(null);
+
+  const isMounted = React.useRef(false);
 
   useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return;
+    }
     const handler = setTimeout(() => {
       setDebouncedFilters(filters);
     }, 500);
     return () => clearTimeout(handler);
   }, [filters]);
+
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, page: 1 }));
+  }, [debouncedFilters]);
 
   useEffect(() => {
     fetchData();
@@ -75,6 +86,7 @@ const FreeConsultation = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
+          setDeletingId(id);
           await deleteFreeConsultation(id);
           Swal.fire({
             title: "Deleted!",
@@ -92,6 +104,8 @@ const FreeConsultation = () => {
             background: colors.background,
             color: colors.text,
           });
+        } finally {
+          setDeletingId(null);
         }
       }
     });
@@ -265,7 +279,7 @@ const FreeConsultation = () => {
                       <button
                         onClick={() =>
                           navigate(
-                            `/dashboard/free-consultation/view/${item._id}`
+                            `/dashboard/free-consultation/view/${item._id}`,
                           )
                         }
                         className="p-2 rounded hover:bg-green-100 text-green-600 transition-colors cursor-pointer"
@@ -276,7 +290,7 @@ const FreeConsultation = () => {
                       <button
                         onClick={() =>
                           navigate(
-                            `/dashboard/free-consultation/edit/${item._id}`
+                            `/dashboard/free-consultation/edit/${item._id}`,
                           )
                         }
                         className="p-2 rounded hover:bg-blue-100 text-blue-600 transition-colors cursor-pointer"
@@ -286,10 +300,15 @@ const FreeConsultation = () => {
                       </button>
                       <button
                         onClick={() => handleDelete(item._id)}
-                        className="p-2 rounded hover:bg-red-100 text-red-600 transition-colors cursor-pointer"
+                        disabled={deletingId === item._id}
+                        className="p-2 rounded hover:bg-red-100 text-red-600 transition-colors cursor-pointer disabled:opacity-50"
                         title="Delete"
                       >
-                        <MdDelete size={18} />
+                        {deletingId === item._id ? (
+                          <Loader size={18} color="#dc2626" />
+                        ) : (
+                          <MdDelete size={18} />
+                        )}
                       </button>
                     </div>
                   </td>
@@ -349,7 +368,7 @@ const FreeConsultation = () => {
                 >
                   {pageNum}
                 </button>
-              )
+              ),
             )}
             <button
               disabled={pagination.page === totalPages}

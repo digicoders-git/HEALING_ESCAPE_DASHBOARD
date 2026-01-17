@@ -31,6 +31,7 @@ const Video = () => {
     isActive: "",
   });
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -85,6 +86,7 @@ const Video = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
+          setDeletingId(id);
           await deleteVideo(id);
           Swal.fire({
             title: "Deleted!",
@@ -102,6 +104,8 @@ const Video = () => {
             background: colors.background,
             color: colors.text,
           });
+        } finally {
+          setDeletingId(null);
         }
       }
     });
@@ -337,10 +341,15 @@ const Video = () => {
                       </button>
                       <button
                         onClick={() => handleDelete(item._id)}
-                        className="p-2 rounded hover:bg-red-100 text-red-600 transition-colors cursor-pointer"
+                        disabled={deletingId === item._id}
+                        className="p-2 rounded hover:bg-red-100 text-red-600 transition-colors cursor-pointer disabled:opacity-50"
                         title="Delete"
                       >
-                        <MdDelete size={18} />
+                        {deletingId === item._id ? (
+                          <Loader size={18} color="#dc2626" />
+                        ) : (
+                          <MdDelete size={18} />
+                        )}
                       </button>
                     </div>
                   </td>
@@ -400,7 +409,7 @@ const Video = () => {
                 >
                   {pageNum}
                 </button>
-              )
+              ),
             )}
             <button
               disabled={pagination.page === totalPages}

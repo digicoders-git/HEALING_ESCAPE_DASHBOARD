@@ -26,15 +26,24 @@ const Enquiry = () => {
     country: "",
     preferredCity: "",
   });
+  const [deletingId, setDeletingId] = useState(null);
+
+  const isMounted = React.useRef(false);
 
   useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return;
+    }
     const handler = setTimeout(() => {
       setDebouncedFilters(filters);
-      // Reset to page 1 when filters change
-      setPagination(prev => ({ ...prev, page: 1 }));
     }, 500);
     return () => clearTimeout(handler);
   }, [filters]);
+
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, page: 1 }));
+  }, [debouncedFilters]);
 
   useEffect(() => {
     fetchData();
@@ -43,24 +52,28 @@ const Enquiry = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      
-      const params = {};
+
+      const params = {
+        page: pagination.page,
+        limit: pagination.limit,
+      };
       if (debouncedFilters.country) params.country = debouncedFilters.country;
-      if (debouncedFilters.preferredCity) params.preferredCity = debouncedFilters.preferredCity;
-      params.page = pagination.page;
-      params.limit = pagination.limit;
-      
+      if (debouncedFilters.preferredCity)
+        params.preferredCity = debouncedFilters.preferredCity;
+
       const response = await getEnquiries(params);
-      
+
       if (response.success) {
         setData(response.data || []);
-        setPagination(prev => ({ ...prev, total: response.total || 0 }));
+        setPagination((prev) => ({ ...prev, total: response.total || 0 }));
       } else {
         setData([]);
+        setPagination({ page: 1, limit: 10, total: 0 });
       }
     } catch (error) {
       console.error("Error:", error);
       setData([]);
+      setPagination({ page: 1, limit: 10, total: 0 });
     } finally {
       setLoading(false);
     }
@@ -80,6 +93,7 @@ const Enquiry = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
+          setDeletingId(id);
           await deleteEnquiry(id);
           Swal.fire({
             title: "Deleted!",
@@ -97,6 +111,8 @@ const Enquiry = () => {
             background: colors.background,
             color: colors.text,
           });
+        } finally {
+          setDeletingId(null);
         }
       }
     });
@@ -286,10 +302,15 @@ const Enquiry = () => {
                       </button>
                       <button
                         onClick={() => handleDelete(item._id)}
-                        className="p-2 rounded hover:bg-red-100 text-red-600 transition-colors cursor-pointer"
+                        disabled={deletingId === item._id}
+                        className="p-2 rounded hover:bg-red-100 text-red-600 transition-colors cursor-pointer disabled:opacity-50"
                         title="Delete"
                       >
-                        <MdDelete size={18} />
+                        {deletingId === item._id ? (
+                          <Loader size={18} color="#dc2626" />
+                        ) : (
+                          <MdDelete size={18} />
+                        )}
                       </button>
                     </div>
                   </td>
@@ -349,7 +370,7 @@ const Enquiry = () => {
                 >
                   {pageNum}
                 </button>
-              )
+              ),
             )}
             <button
               disabled={pagination.page === totalPages}
