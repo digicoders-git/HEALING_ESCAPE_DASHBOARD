@@ -17,6 +17,7 @@ import {
   MdOutlineVideoLibrary,
   MdChatBubble,
   MdQuestionAnswer,
+  MdOutlineFormatListNumberedRtl,
 } from "react-icons/md";
 
 import { Clock } from "./Clock";
@@ -28,7 +29,7 @@ import Swal from "sweetalert2";
 const Dashboard = () => {
   const { colors, isDarkMode, toggleTheme, currentTheme, themes, setTheme } =
     useTheme();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(MdOutlineFormatListNumberedRtl);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState(null);
   const location = useLocation();
