@@ -18,12 +18,11 @@ const Enquiry = () => {
     total: 0,
   });
   const [filters, setFilters] = useState({
-    search: "",
     country: "",
     preferredCity: "",
   });
+  // console.log(filters.search)
   const [debouncedFilters, setDebouncedFilters] = useState({
-    search: "",
     country: "",
     preferredCity: "",
   });
@@ -31,6 +30,8 @@ const Enquiry = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedFilters(filters);
+      // Reset to page 1 when filters change
+      setPagination(prev => ({ ...prev, page: 1 }));
     }, 500);
     return () => clearTimeout(handler);
   }, [filters]);
@@ -42,24 +43,24 @@ const Enquiry = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const params = {
-        page: pagination.page,
-        limit: pagination.limit,
-      };
-
-      if (debouncedFilters.search) params.search = debouncedFilters.search;
+      
+      const params = {};
       if (debouncedFilters.country) params.country = debouncedFilters.country;
-      if (debouncedFilters.preferredCity)
-        params.preferredCity = debouncedFilters.preferredCity;
-
+      if (debouncedFilters.preferredCity) params.preferredCity = debouncedFilters.preferredCity;
+      params.page = pagination.page;
+      params.limit = pagination.limit;
+      
       const response = await getEnquiries(params);
+      
       if (response.success) {
-        setData(response.data);
-        setPagination((prev) => ({ ...prev, total: response.total }));
+        setData(response.data || []);
+        setPagination(prev => ({ ...prev, total: response.total || 0 }));
+      } else {
+        setData([]);
       }
     } catch (error) {
-      console.error("Error fetching enquiries:", error);
-      Swal.fire("Error", "Failed to fetch data", "error");
+      console.error("Error:", error);
+      setData([]);
     } finally {
       setLoading(false);
     }
@@ -118,25 +119,7 @@ const Enquiry = () => {
       </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="relative">
-          <MdSearch
-            className="absolute left-3 top-3 z-10"
-            style={{ color: colors.textSecondary }}
-          />
-          <input
-            type="text"
-            placeholder="Search by message..."
-            value={filters.search}
-            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-            className="w-full pl-10 pr-4 py-2.5 rounded border outline-none focus:ring-1"
-            style={{
-              backgroundColor: colors.background,
-              borderColor: colors.accent + "40",
-              color: colors.text,
-            }}
-          />
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div className="relative">
           <MdSearch
             className="absolute left-3 top-3 z-10"
