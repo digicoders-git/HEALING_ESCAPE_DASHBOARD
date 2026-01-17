@@ -15,6 +15,8 @@ import {
   MdOutlineArticle,
   MdOutlineCollections,
   MdOutlineVideoLibrary,
+  MdChatBubble,
+  MdQuestionAnswer,
 } from "react-icons/md";
 
 import { Clock } from "./Clock";
@@ -96,6 +98,16 @@ const Dashboard = () => {
     { name: "Blogs", icon: MdOutlineArticle, path: "/dashboard/blog" },
     { name: "Gallery", icon: MdOutlineCollections, path: "/dashboard/gallery" },
     { name: "Videos", icon: MdOutlineVideoLibrary, path: "/dashboard/video" },
+    {
+      name: "Free Consultation",
+      icon: MdChatBubble,
+      path: "/dashboard/free-consultation",
+    },
+    {
+      name: "Enquiry",
+      icon: MdQuestionAnswer,
+      path: "/dashboard/enquiry",
+    },
     { name: "Profile", icon: MdPerson, path: "/dashboard/profile" },
   ];
 
