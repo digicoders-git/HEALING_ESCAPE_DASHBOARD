@@ -29,7 +29,7 @@ import Swal from "sweetalert2";
 const Dashboard = () => {
   const { colors, isDarkMode, toggleTheme, currentTheme, themes, setTheme } =
     useTheme();
-  const [sidebarOpen, setSidebarOpen] = useState(MdOutlineFormatListNumberedRtl);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState(null);
   const location = useLocation();
