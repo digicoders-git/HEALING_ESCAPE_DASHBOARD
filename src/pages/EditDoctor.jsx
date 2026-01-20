@@ -59,7 +59,13 @@ const TagInput = ({
             <button
               type="button"
               onClick={() => handleRemoveTag(index)}
-              className="hover:bg-black/10 rounded-full p-0.5 cursor-pointer"
+              className="rounded-full p-0.5 cursor-pointer transition-colors"
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = colors.accent + "30")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = "transparent")
+              }
             >
               <MdClose size={14} />
             </button>
@@ -437,8 +443,11 @@ const EditDoctor = () => {
           </div>
 
           <div
-            className="mt-8 p-6 rounded-lg border-2 border-dashed bg-black/5"
-            style={{ borderColor: colors.accent + "30" }}
+            className="mt-8 p-6 rounded-lg border-2 border-dashed"
+            style={{
+              backgroundColor: colors.accent + "10",
+              borderColor: colors.accent + "30",
+            }}
           >
             <h3
               className="text-sm font-bold uppercase tracking-wider mb-4"
@@ -458,8 +467,9 @@ const EditDoctor = () => {
               <select
                 value={selectedHospitalId}
                 onChange={handleHospitalSelect}
-                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 bg-white/50 cursor-pointer"
+                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 cursor-pointer transition-all"
                 style={{
+                  backgroundColor: colors.sidebar || colors.background,
                   borderColor: colors.accent + "40",
                   color: colors.text,
                 }}
@@ -488,8 +498,9 @@ const EditDoctor = () => {
                   required
                   value={formData.hospitalName}
                   readOnly
-                  className="w-full px-4 py-2.5 rounded border outline-none bg-gray-100 cursor-not-allowed"
+                  className="w-full px-4 py-2.5 rounded border outline-none cursor-not-allowed opacity-70"
                   style={{
+                    backgroundColor: colors.accent + "10",
                     borderColor: colors.accent + "40",
                     color: colors.textSecondary,
                   }}
@@ -508,8 +519,9 @@ const EditDoctor = () => {
                   required
                   value={formData.hospitalCity}
                   readOnly
-                  className="w-full px-4 py-2.5 rounded border outline-none bg-gray-100 cursor-not-allowed"
+                  className="w-full px-4 py-2.5 rounded border outline-none cursor-not-allowed opacity-70"
                   style={{
+                    backgroundColor: colors.accent + "10",
                     borderColor: colors.accent + "40",
                     color: colors.textSecondary,
                   }}
@@ -527,8 +539,9 @@ const EditDoctor = () => {
                   type="text"
                   value={formData.hospitalAccreditation}
                   readOnly
-                  className="w-full px-4 py-2.5 rounded border outline-none bg-gray-100 cursor-not-allowed"
+                  className="w-full px-4 py-2.5 rounded border outline-none cursor-not-allowed opacity-70"
                   style={{
+                    backgroundColor: colors.accent + "10",
                     borderColor: colors.accent + "40",
                     color: colors.textSecondary,
                   }}

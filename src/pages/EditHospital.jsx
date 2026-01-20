@@ -58,7 +58,13 @@ const TagInput = ({
             <button
               type="button"
               onClick={() => handleRemoveTag(index)}
-              className="hover:bg-black/10 rounded-full p-0.5 cursor-pointer"
+              className="rounded-full p-0.5 cursor-pointer transition-colors"
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = colors.accent + "30")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = "transparent")
+              }
             >
               <MdClose size={14} />
             </button>
@@ -135,24 +141,24 @@ const EditHospital = () => {
         });
         setImagePreview(hospital.image);
         setAccreditations(
-          Array.isArray(hospital.accreditations) ? hospital.accreditations : []
+          Array.isArray(hospital.accreditations) ? hospital.accreditations : [],
         );
         setSpecialities(
-          Array.isArray(hospital.specialities) ? hospital.specialities : []
+          Array.isArray(hospital.specialities) ? hospital.specialities : [],
         );
         setDepartments(
-          Array.isArray(hospital.departments) ? hospital.departments : []
+          Array.isArray(hospital.departments) ? hospital.departments : [],
         );
         setInfrastructure(
-          Array.isArray(hospital.infrastructure) ? hospital.infrastructure : []
+          Array.isArray(hospital.infrastructure) ? hospital.infrastructure : [],
         );
         setWhyChoose(
-          Array.isArray(hospital.whyChoose) ? hospital.whyChoose : []
+          Array.isArray(hospital.whyChoose) ? hospital.whyChoose : [],
         );
         setInternationalServices(
           Array.isArray(hospital.internationalServices)
             ? hospital.internationalServices
-            : []
+            : [],
         );
       }
     } catch (error) {
@@ -195,7 +201,7 @@ const EditHospital = () => {
       data.append("whyChoose", JSON.stringify(whyChoose));
       data.append(
         "internationalServices",
-        JSON.stringify(internationalServices)
+        JSON.stringify(internationalServices),
       );
 
       const response = await updateHospital(id, data);
@@ -208,7 +214,7 @@ const EditHospital = () => {
       Swal.fire(
         "Error",
         error.response?.data?.message || "Failed to update hospital",
-        "error"
+        "error",
       );
     } finally {
       setSubmitting(false);

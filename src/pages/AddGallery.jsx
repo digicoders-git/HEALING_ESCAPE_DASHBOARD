@@ -97,7 +97,7 @@ const AddGallery = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8"
+        className="max-w-full grid grid-cols-1 md:grid-cols-2 gap-8"
       >
         <div className="space-y-6">
           <div

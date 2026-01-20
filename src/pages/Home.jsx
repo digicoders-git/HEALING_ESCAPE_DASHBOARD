@@ -302,10 +302,10 @@ const Home = () => {
         {statCards.map((card, index) => (
           <div
             key={index}
-            className="p-6 rounded border shadow-sm transition-all hover:shadow-md group"
+            className="p-6 rounded border shadow-sm transition-all hover:shadow-md group cursor-pointer"
             style={{
-              backgroundColor: colors.background,
-              borderColor: colors.accent + "20",
+              backgroundColor: colors.sidebar || colors.background,
+              borderColor: colors.accent + "30",
             }}
           >
             <div className="flex flex-col items-center text-center space-y-3">
@@ -341,8 +341,8 @@ const Home = () => {
       <div
         className="p-8 rounded border shadow-xl transition-all"
         style={{
-          backgroundColor: colors.background,
-          borderColor: colors.accent + "20",
+          backgroundColor: colors.sidebar || colors.background,
+          borderColor: colors.accent + "30",
         }}
       >
         <HighchartsReact highcharts={Highcharts} options={chartOptions} />
@@ -352,8 +352,8 @@ const Home = () => {
       <div
         className="p-8 rounded border shadow-xl transition-all"
         style={{
-          backgroundColor: colors.background,
-          borderColor: colors.accent + "20",
+          backgroundColor: colors.sidebar || colors.background,
+          borderColor: colors.accent + "30",
         }}
       >
         <HighchartsReact highcharts={Highcharts} options={lineChartOptions} />

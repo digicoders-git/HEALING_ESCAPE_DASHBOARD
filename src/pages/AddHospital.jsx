@@ -58,7 +58,13 @@ const TagInput = ({
             <button
               type="button"
               onClick={() => handleRemoveTag(index)}
-              className="hover:bg-black/10 rounded-full p-0.5 cursor-pointer"
+              className="rounded-full p-0.5 cursor-pointer transition-colors"
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = colors.accent + "30")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = "transparent")
+              }
             >
               <MdClose size={14} />
             </button>
@@ -143,7 +149,7 @@ const AddHospital = () => {
       data.append("whyChoose", JSON.stringify(whyChoose));
       data.append(
         "internationalServices",
-        JSON.stringify(internationalServices)
+        JSON.stringify(internationalServices),
       );
 
       const response = await createHospital(data);
@@ -156,7 +162,7 @@ const AddHospital = () => {
       Swal.fire(
         "Error",
         error.response?.data?.message || "Failed to create hospital",
-        "error"
+        "error",
       );
     } finally {
       setSubmitting(false);
@@ -183,7 +189,7 @@ const AddHospital = () => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="max-w-4xl">
+      <form onSubmit={handleSubmit} className="max-w-full">
         <div
           className="rounded-lg border p-6"
           style={{

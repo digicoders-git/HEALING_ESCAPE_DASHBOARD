@@ -165,7 +165,7 @@ const AddVideo = () => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="max-w-6xl mx-auto space-y-8">
+      <form onSubmit={handleSubmit} className="max-w-full mx-auto space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Form Side */}
           <div className="lg:col-span-8 space-y-6">

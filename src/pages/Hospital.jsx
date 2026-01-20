@@ -303,8 +303,17 @@ const Hospital = () => {
               data.map((item) => (
                 <tr
                   key={item._id}
-                  className="border-b last:border-0 hover:bg-black/5 transition-colors"
-                  style={{ borderColor: colors.accent + "20" }}
+                  className="border-b last:border-0 transition-colors"
+                  style={{
+                    borderColor: colors.accent + "20",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor =
+                      colors.accent + "10")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "transparent")
+                  }
                 >
                   <td className="p-4">
                     <img

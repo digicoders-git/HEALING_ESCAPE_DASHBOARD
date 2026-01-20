@@ -174,7 +174,7 @@ const AddSpeciality = () => {
       </div>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="max-w-4xl">
+      <form onSubmit={handleSubmit} className="max-w-full">
         <div
           className="rounded-lg border p-6 shadow-sm"
           style={{

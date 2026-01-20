@@ -453,15 +453,15 @@ const Dashboard = () => {
 
       {/* Settings Modal */}
       <div
-        className={`settings-modal fixed top-0 right-0 w-full sm:w-80 z-50 transform transition-all duration-700 ease-out ${
+        className={`settings-modal fixed top-0 right-0 w-full sm:w-80 min-h-screen z-50 transform transition-all duration-700 ease-out ${
           settingsOpen
             ? "translate-x-0 opacity-100"
             : "translate-x-full opacity-0"
-        } shadow-2xl`}
-        style={{ backgroundColor: colors.background }}
+        } shadow-2xl overflow-y-auto`}
+        style={{ backgroundColor: colors.sidebar || colors.background }}
       >
         <div
-          className="p-6 border-l h-auto"
+          className="p-6 h-full min-h-screen border-l"
           style={{ borderColor: colors.accent + "30" }}
         >
           <div className="flex items-center justify-between mb-6">
