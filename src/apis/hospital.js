@@ -33,3 +33,8 @@ export const deleteHospital = async (id) => {
   const response = await http.delete(`/hospital/delete/${id}`);
   return response.data;
 };
+
+export const getHospitalDropdown = async () => {
+  const response = await http.get("/hospital/dropdown/list");
+  return response.data;
+};

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTheme } from "../context/ThemeContext";
 import { getDoctorById, updateDoctor } from "../apis/doctor";
+import { getHospitalDropdown } from "../apis/hospital";
 import { MdArrowBack, MdSave, MdImage, MdClose } from "react-icons/md";
 import Loader from "../components/ui/Loader";
 import Swal from "sweetalert2";
@@ -86,6 +87,8 @@ const EditDoctor = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
+  const [hospitalList, setHospitalList] = useState([]);
+  const [selectedHospitalId, setSelectedHospitalId] = useState("");
 
   // States for Tag Inputs
   const [expertise, setExpertise] = useState([]);
@@ -113,8 +116,44 @@ const EditDoctor = () => {
   });
 
   useEffect(() => {
+    fetchHospitals();
     fetchDoctor();
   }, [id]);
+
+  const fetchHospitals = async () => {
+    try {
+      const response = await getHospitalDropdown();
+      if (response.success) {
+        setHospitalList(response.hospitals || []);
+      }
+    } catch (error) {
+      console.error("Error fetching hospitals:", error);
+    }
+  };
+
+  const handleHospitalSelect = (e) => {
+    const hospitalId = e.target.value;
+    setSelectedHospitalId(hospitalId);
+
+    if (hospitalId) {
+      const selectedHospital = hospitalList.find((h) => h._id === hospitalId);
+      if (selectedHospital) {
+        setFormData({
+          ...formData,
+          hospitalName: selectedHospital.name,
+          hospitalCity: selectedHospital.city,
+          hospitalAccreditation: selectedHospital.accreditations.join(", "),
+        });
+      }
+    } else {
+      setFormData({
+        ...formData,
+        hospitalName: "",
+        hospitalCity: "",
+        hospitalAccreditation: "",
+      });
+    }
+  };
 
   const fetchDoctor = async () => {
     try {
@@ -203,7 +242,7 @@ const EditDoctor = () => {
       Swal.fire(
         "Error",
         error.response?.data?.message || "Failed to update doctor profile",
-        "error"
+        "error",
       );
     } finally {
       setSubmitting(false);
@@ -407,6 +446,35 @@ const EditDoctor = () => {
             >
               Hospital Information
             </h3>
+
+            {/* Hospital Dropdown */}
+            <div className="mb-6">
+              <label
+                className="block text-sm font-medium mb-2"
+                style={{ color: colors.textSecondary }}
+              >
+                Select Hospital *
+              </label>
+              <select
+                value={selectedHospitalId}
+                onChange={handleHospitalSelect}
+                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 bg-white/50 cursor-pointer"
+                style={{
+                  borderColor: colors.accent + "40",
+                  color: colors.text,
+                }}
+                required
+              >
+                <option value="">-- Select a Hospital --</option>
+                {hospitalList.map((hospital) => (
+                  <option key={hospital._id} value={hospital._id}>
+                    {hospital.name} - {hospital.city}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Auto-filled Hospital Details */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <label
@@ -419,14 +487,13 @@ const EditDoctor = () => {
                   type="text"
                   required
                   value={formData.hospitalName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, hospitalName: e.target.value })
-                  }
-                  className="w-full px-4 py-2.5 rounded border outline-none bg-white/50"
+                  readOnly
+                  className="w-full px-4 py-2.5 rounded border outline-none bg-gray-100 cursor-not-allowed"
                   style={{
                     borderColor: colors.accent + "40",
-                    color: colors.text,
+                    color: colors.textSecondary,
                   }}
+                  placeholder="Auto-filled from dropdown"
                 />
               </div>
               <div>
@@ -440,14 +507,13 @@ const EditDoctor = () => {
                   type="text"
                   required
                   value={formData.hospitalCity}
-                  onChange={(e) =>
-                    setFormData({ ...formData, hospitalCity: e.target.value })
-                  }
-                  className="w-full px-4 py-2.5 rounded border outline-none bg-white/50"
+                  readOnly
+                  className="w-full px-4 py-2.5 rounded border outline-none bg-gray-100 cursor-not-allowed"
                   style={{
                     borderColor: colors.accent + "40",
-                    color: colors.text,
+                    color: colors.textSecondary,
                   }}
+                  placeholder="Auto-filled from dropdown"
                 />
               </div>
               <div>
@@ -460,18 +526,13 @@ const EditDoctor = () => {
                 <input
                   type="text"
                   value={formData.hospitalAccreditation}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      hospitalAccreditation: e.target.value,
-                    })
-                  }
-                  className="w-full px-4 py-2.5 rounded border outline-none bg-white/50"
+                  readOnly
+                  className="w-full px-4 py-2.5 rounded border outline-none bg-gray-100 cursor-not-allowed"
                   style={{
                     borderColor: colors.accent + "40",
-                    color: colors.text,
+                    color: colors.textSecondary,
                   }}
-                  placeholder="e.g., NABH, JCI (Comma separated)"
+                  placeholder="Auto-filled from dropdown"
                 />
               </div>
             </div>

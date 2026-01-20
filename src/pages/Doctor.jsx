@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useTheme } from "../context/ThemeContext";
-import { getDoctors, deleteDoctor, updateDoctorStatus } from "../apis/doctor";
-import { getSpecialities } from "../apis/speciality";
+import {
+  getDoctors,
+  deleteDoctor,
+  updateDoctorStatus,
+  getDoctorSpecialitiesDropdown,
+} from "../apis/doctor";
 import {
   MdEdit,
   MdDelete,
@@ -42,9 +46,9 @@ const Doctor = () => {
 
   const fetchSpecialities = async () => {
     try {
-      const response = await getSpecialities({ limit: 100 });
+      const response = await getDoctorSpecialitiesDropdown();
       if (response.success) {
-        setSpecialityList(response.specialities);
+        setSpecialityList(response.specialities || []);
       }
     } catch (error) {
       console.error("Error fetching specialities:", error);
@@ -206,18 +210,19 @@ const Doctor = () => {
       </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="relative">
+      <div className="flex flex-col md:flex-row gap-4 mb-6">
+        {/* Search Input - Takes more width */}
+        <div className="relative flex-1">
           <MdSearch
             className="absolute left-3 top-3 z-10"
             style={{ color: colors.textSecondary }}
           />
           <input
             type="text"
-            placeholder="Search doctor..."
+            placeholder="Search doctor by name, city, speciality, hospital name"
             value={filters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-            className="w-full pl-10 pr-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
+            className="w-full pl-10 pr-4 py-[6px] rounded border outline-none focus:ring-1 transition-all"
             style={{
               backgroundColor: colors.background,
               borderColor: colors.accent + "40",
@@ -226,46 +231,28 @@ const Doctor = () => {
           />
         </div>
 
-        <ModernSelect
-          options={[
-            { label: "All Specialities", value: "" },
-            ...specialityList.map((s) => ({ label: s.name, value: s.name })),
-          ]}
-          value={filters.speciality}
-          onChange={(value) => setFilters({ ...filters, speciality: value })}
-          placeholder="Filter by Speciality"
-        />
-
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Filter by City..."
-            value={filters.city}
-            onChange={(e) => setFilters({ ...filters, city: e.target.value })}
-            className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
-            style={{
-              backgroundColor: colors.background,
-              borderColor: colors.accent + "40",
-              color: colors.text,
-            }}
+        {/* Speciality Filter - Minimal width */}
+        <div className="w-full md:w-auto md:min-w-[200px]">
+          <ModernSelect
+            options={[
+              { label: "All Specialities", value: "" },
+              ...specialityList.map((s) => ({ label: s, value: s })),
+            ]}
+            value={filters.speciality}
+            onChange={(value) => setFilters({ ...filters, speciality: value })}
+            placeholder="Filter by Speciality"
           />
-          {filters.city && (
-            <button
-              onClick={() => setFilters({ ...filters, city: "" })}
-              className="absolute right-3 top-3 text-xs opacity-50 hover:opacity-100 cursor-pointer"
-              style={{ color: colors.text }}
-            >
-              Clear
-            </button>
-          )}
         </div>
 
-        <ModernSelect
-          options={statusOptions}
-          value={filters.isActive}
-          onChange={(value) => setFilters({ ...filters, isActive: value })}
-          placeholder="All Status"
-        />
+        {/* Status Filter - Minimal width */}
+        <div className="w-full md:w-auto md:min-w-[180px]">
+          <ModernSelect
+            options={statusOptions}
+            value={filters.isActive}
+            onChange={(value) => setFilters({ ...filters, isActive: value })}
+            placeholder="All Status"
+          />
+        </div>
       </div>
 
       {/* Table */}

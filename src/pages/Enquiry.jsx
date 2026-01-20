@@ -17,15 +17,8 @@ const Enquiry = () => {
     limit: 10,
     total: 0,
   });
-  const [filters, setFilters] = useState({
-    country: "",
-    preferredCity: "",
-  });
-  // console.log(filters.search)
-  const [debouncedFilters, setDebouncedFilters] = useState({
-    country: "",
-    preferredCity: "",
-  });
+  const [filters, setFilters] = useState({ search: "" });
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [deletingId, setDeletingId] = useState(null);
 
   const isMounted = React.useRef(false);
@@ -36,18 +29,18 @@ const Enquiry = () => {
       return;
     }
     const handler = setTimeout(() => {
-      setDebouncedFilters(filters);
+      setDebouncedSearch(filters.search);
     }, 500);
     return () => clearTimeout(handler);
-  }, [filters]);
+  }, [filters.search]);
 
   useEffect(() => {
     setPagination((prev) => ({ ...prev, page: 1 }));
-  }, [debouncedFilters]);
+  }, [debouncedSearch]);
 
   useEffect(() => {
     fetchData();
-  }, [pagination.page, debouncedFilters]);
+  }, [pagination.page, debouncedSearch]);
 
   const fetchData = async () => {
     try {
@@ -57,9 +50,7 @@ const Enquiry = () => {
         page: pagination.page,
         limit: pagination.limit,
       };
-      if (debouncedFilters.country) params.country = debouncedFilters.country;
-      if (debouncedFilters.preferredCity)
-        params.preferredCity = debouncedFilters.preferredCity;
+      if (debouncedSearch) params.search = debouncedSearch;
 
       const response = await getEnquiries(params);
 
@@ -135,40 +126,18 @@ const Enquiry = () => {
       </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="relative">
+      <div className="flex flex-col md:flex-row gap-4 mb-6">
+        <div className="relative flex-1">
           <MdSearch
             className="absolute left-3 top-3 z-10"
             style={{ color: colors.textSecondary }}
           />
           <input
             type="text"
-            placeholder="Search by Country..."
-            value={filters.country}
-            onChange={(e) =>
-              setFilters({ ...filters, country: e.target.value })
-            }
-            className="w-full pl-10 pr-4 py-2.5 rounded border outline-none focus:ring-1"
-            style={{
-              backgroundColor: colors.background,
-              borderColor: colors.accent + "40",
-              color: colors.text,
-            }}
-          />
-        </div>
-        <div className="relative">
-          <MdSearch
-            className="absolute left-3 top-3 z-10"
-            style={{ color: colors.textSecondary }}
-          />
-          <input
-            type="text"
-            placeholder="Search by Preferred City..."
-            value={filters.preferredCity}
-            onChange={(e) =>
-              setFilters({ ...filters, preferredCity: e.target.value })
-            }
-            className="w-full pl-10 pr-4 py-2.5 rounded border outline-none focus:ring-1"
+            placeholder="Search by full name, email, phone, country, city, message..."
+            value={filters.search}
+            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+            className="w-full pl-10 pr-4 py-[6px] rounded border outline-none focus:ring-1 transition-all"
             style={{
               backgroundColor: colors.background,
               borderColor: colors.accent + "40",
@@ -186,6 +155,12 @@ const Enquiry = () => {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr style={{ backgroundColor: colors.accent + "10" }}>
+              <th
+                className="p-4 font-semibold text-sm w-16"
+                style={{ color: colors.textSecondary }}
+              >
+                S.No
+              </th>
               <th
                 className="p-4 font-semibold text-sm"
                 style={{ color: colors.textSecondary }}
@@ -233,7 +208,7 @@ const Enquiry = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="7" className="p-10 text-center">
+                <td colSpan="8" className="p-10 text-center">
                   <div className="flex justify-center">
                     <Loader size={40} />
                   </div>
@@ -242,7 +217,7 @@ const Enquiry = () => {
             ) : data.length === 0 ? (
               <tr>
                 <td
-                  colSpan="7"
+                  colSpan="8"
                   className="p-10 text-center font-medium"
                   style={{ color: colors.textSecondary }}
                 >
@@ -250,12 +225,15 @@ const Enquiry = () => {
                 </td>
               </tr>
             ) : (
-              data.map((item) => (
+              data.map((item, index) => (
                 <tr
                   key={item._id}
                   className="border-b last:border-0 hover:bg-black/5 transition-colors"
                   style={{ borderColor: colors.accent + "20" }}
                 >
+                  <td className="p-4 text-sm" style={{ color: colors.text }}>
+                    {(pagination.page - 1) * pagination.limit + index + 1}
+                  </td>
                   <td
                     className="p-4 font-medium"
                     style={{ color: colors.text }}

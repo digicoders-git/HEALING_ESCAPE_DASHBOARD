@@ -185,8 +185,9 @@ const Gallery = () => {
       </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="relative">
+      <div className="flex flex-col md:flex-row gap-4 mb-6">
+        {/* Search Input - Takes more width */}
+        <div className="relative flex-1">
           <MdSearch
             className="absolute left-3 top-3 z-10"
             style={{ color: colors.textSecondary }}
@@ -196,7 +197,7 @@ const Gallery = () => {
             placeholder="Search by caption..."
             value={filters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-            className="w-full pl-10 pr-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
+            className="w-full pl-10 pr-4 py-[6px] rounded border outline-none focus:ring-1 transition-all"
             style={{
               backgroundColor: colors.background,
               borderColor: colors.accent + "40",
@@ -205,12 +206,15 @@ const Gallery = () => {
           />
         </div>
 
-        <ModernSelect
-          options={statusOptions}
-          value={filters.isActive}
-          onChange={(value) => setFilters({ ...filters, isActive: value })}
-          placeholder="All Status"
-        />
+        {/* Status Filter - Minimal width */}
+        <div className="w-full md:w-auto md:min-w-[180px]">
+          <ModernSelect
+            options={statusOptions}
+            value={filters.isActive}
+            onChange={(value) => setFilters({ ...filters, isActive: value })}
+            placeholder="All Status"
+          />
+        </div>
       </div>
 
       {/* Table */}

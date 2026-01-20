@@ -20,11 +20,8 @@ const FreeConsultation = () => {
     limit: 10,
     total: 0,
   });
-  const [filters, setFilters] = useState({ country: "", city: "" });
-  const [debouncedFilters, setDebouncedFilters] = useState({
-    country: "",
-    city: "",
-  });
+  const [filters, setFilters] = useState({ search: "" });
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [deletingId, setDeletingId] = useState(null);
 
   const isMounted = React.useRef(false);
@@ -35,18 +32,18 @@ const FreeConsultation = () => {
       return;
     }
     const handler = setTimeout(() => {
-      setDebouncedFilters(filters);
+      setDebouncedSearch(filters.search);
     }, 500);
     return () => clearTimeout(handler);
-  }, [filters]);
+  }, [filters.search]);
 
   useEffect(() => {
     setPagination((prev) => ({ ...prev, page: 1 }));
-  }, [debouncedFilters]);
+  }, [debouncedSearch]);
 
   useEffect(() => {
     fetchData();
-  }, [pagination.page, debouncedFilters]);
+  }, [pagination.page, debouncedSearch]);
 
   const fetchData = async () => {
     try {
@@ -56,8 +53,7 @@ const FreeConsultation = () => {
         limit: pagination.limit,
       };
 
-      if (debouncedFilters.country) params.country = debouncedFilters.country;
-      if (debouncedFilters.city) params.city = debouncedFilters.city;
+      if (debouncedSearch) params.search = debouncedSearch;
 
       const response = await getFreeConsultations(params);
       if (response.success) {
@@ -136,30 +132,10 @@ const FreeConsultation = () => {
           />
           <input
             type="text"
-            placeholder="Search by Country..."
-            value={filters.country}
-            onChange={(e) =>
-              setFilters({ ...filters, country: e.target.value })
-            }
-            className="w-full pl-10 pr-4 py-2.5 rounded border outline-none focus:ring-1"
-            style={{
-              backgroundColor: colors.background,
-              borderColor: colors.accent + "40",
-              color: colors.text,
-            }}
-          />
-        </div>
-        <div className="relative flex-1">
-          <MdSearch
-            className="absolute left-3 top-3 z-10"
-            style={{ color: colors.textSecondary }}
-          />
-          <input
-            type="text"
-            placeholder="Search by City..."
-            value={filters.city}
-            onChange={(e) => setFilters({ ...filters, city: e.target.value })}
-            className="w-full pl-10 pr-4 py-2.5 rounded border outline-none focus:ring-1"
+            placeholder="Search by full name, country, city, mobile, clinical requirement..."
+            value={filters.search}
+            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+            className="w-full pl-10 pr-4 py-[6px] rounded border outline-none focus:ring-1 transition-all"
             style={{
               backgroundColor: colors.background,
               borderColor: colors.accent + "40",
@@ -177,6 +153,12 @@ const FreeConsultation = () => {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr style={{ backgroundColor: colors.accent + "10" }}>
+              <th
+                className="p-4 font-semibold text-sm w-16"
+                style={{ color: colors.textSecondary }}
+              >
+                S.No
+              </th>
               <th
                 className="p-4 font-semibold text-sm"
                 style={{ color: colors.textSecondary }}
@@ -224,7 +206,7 @@ const FreeConsultation = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="7" className="p-10 text-center">
+                <td colSpan="8" className="p-10 text-center">
                   <div className="flex justify-center">
                     <Loader size={40} />
                   </div>
@@ -233,7 +215,7 @@ const FreeConsultation = () => {
             ) : data.length === 0 ? (
               <tr>
                 <td
-                  colSpan="7"
+                  colSpan="8"
                   className="p-10 text-center font-medium"
                   style={{ color: colors.textSecondary }}
                 >
@@ -241,12 +223,15 @@ const FreeConsultation = () => {
                 </td>
               </tr>
             ) : (
-              data.map((item) => (
+              data.map((item, index) => (
                 <tr
                   key={item._id}
                   className="border-b last:border-0 hover:bg-black/5 transition-colors"
                   style={{ borderColor: colors.accent + "20" }}
                 >
+                  <td className="p-4 text-sm" style={{ color: colors.text }}>
+                    {(pagination.page - 1) * pagination.limit + index + 1}
+                  </td>
                   <td
                     className="p-4 font-medium"
                     style={{ color: colors.text }}

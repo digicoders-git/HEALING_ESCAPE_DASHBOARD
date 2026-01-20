@@ -432,7 +432,7 @@ const Dashboard = () => {
               }
               style={{ color: colors.primary }}
             >
-              {/* <Settings className="w-5 h-5 md:w-6 md:h-6" /> */}
+              <Settings className="w-5 h-5 md:w-6 md:h-6" />
             </button>
             {/* <div className='w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center'
                  style={{ backgroundColor: colors.accent }}>

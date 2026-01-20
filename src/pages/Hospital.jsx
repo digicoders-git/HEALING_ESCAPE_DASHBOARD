@@ -202,18 +202,19 @@ const Hospital = () => {
       </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="relative">
+      <div className="flex gap-4 mb-6">
+        {/* 🔍 Search - 80% width */}
+        <div className="relative w-full">
           <MdSearch
             className="absolute left-3 top-3 z-10"
             style={{ color: colors.textSecondary }}
           />
           <input
             type="text"
-            placeholder="Search hospital..."
+            placeholder="Search by hospital name, city, about, description, specialities, accreditations, departments"
             value={filters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-            className="w-full pl-10 pr-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
+            className="w-full pl-10 pr-4 py-[6px] rounded border outline-none focus:ring-1 transition-all"
             style={{
               backgroundColor: colors.background,
               borderColor: colors.accent + "40",
@@ -222,40 +223,15 @@ const Hospital = () => {
           />
         </div>
 
-        <input
-          type="text"
-          placeholder="City..."
-          value={filters.city}
-          onChange={(e) => setFilters({ ...filters, city: e.target.value })}
-          className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
-          style={{
-            backgroundColor: colors.background,
-            borderColor: colors.accent + "40",
-            color: colors.text,
-          }}
-        />
-
-        <input
-          type="text"
-          placeholder="Speciality..."
-          value={filters.speciality}
-          onChange={(e) =>
-            setFilters({ ...filters, speciality: e.target.value })
-          }
-          className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
-          style={{
-            backgroundColor: colors.background,
-            borderColor: colors.accent + "40",
-            color: colors.text,
-          }}
-        />
-
-        <ModernSelect
-          options={statusOptions}
-          value={filters.isActive}
-          onChange={(value) => setFilters({ ...filters, isActive: value })}
-          placeholder="All Status"
-        />
+        {/* 🟢 Status - auto width */}
+        <div className="w-fit">
+          <ModernSelect
+            options={statusOptions}
+            value={filters.isActive}
+            onChange={(value) => setFilters({ ...filters, isActive: value })}
+            placeholder="All Status"
+          />
+        </div>
       </div>
 
       {/* Table */}

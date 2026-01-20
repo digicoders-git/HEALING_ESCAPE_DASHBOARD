@@ -33,3 +33,8 @@ export const deleteDoctor = async (id) => {
   const response = await http.delete(`/doctor/delete/${id}`);
   return response.data;
 };
+
+export const getDoctorSpecialitiesDropdown = async () => {
+  const response = await http.get("/doctor/specialities/dropdown");
+  return response.data;
+};

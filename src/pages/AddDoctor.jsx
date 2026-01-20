@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTheme } from "../context/ThemeContext";
 import { createDoctor } from "../apis/doctor";
+import { getHospitalDropdown } from "../apis/hospital";
 import { MdArrowBack, MdSave, MdImage, MdClose } from "react-icons/md";
 import Loader from "../components/ui/Loader";
 import Swal from "sweetalert2";
@@ -83,6 +84,8 @@ const AddDoctor = () => {
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
+  const [hospitalList, setHospitalList] = useState([]);
+  const [selectedHospitalId, setSelectedHospitalId] = useState("");
 
   // States for Tag Inputs
   const [expertise, setExpertise] = useState([]);
@@ -107,6 +110,45 @@ const AddDoctor = () => {
     hospitalCity: "",
     hospitalAccreditation: "",
   });
+
+  useEffect(() => {
+    fetchHospitals();
+  }, []);
+
+  const fetchHospitals = async () => {
+    try {
+      const response = await getHospitalDropdown();
+      if (response.success) {
+        setHospitalList(response.hospitals || []);
+      }
+    } catch (error) {
+      console.error("Error fetching hospitals:", error);
+    }
+  };
+
+  const handleHospitalSelect = (e) => {
+    const hospitalId = e.target.value;
+    setSelectedHospitalId(hospitalId);
+
+    if (hospitalId) {
+      const selectedHospital = hospitalList.find((h) => h._id === hospitalId);
+      if (selectedHospital) {
+        setFormData({
+          ...formData,
+          hospitalName: selectedHospital.name,
+          hospitalCity: selectedHospital.city,
+          hospitalAccreditation: selectedHospital.accreditations.join(", "),
+        });
+      }
+    } else {
+      setFormData({
+        ...formData,
+        hospitalName: "",
+        hospitalCity: "",
+        hospitalAccreditation: "",
+      });
+    }
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -160,7 +202,7 @@ const AddDoctor = () => {
       Swal.fire(
         "Error",
         error.response?.data?.message || "Failed to create doctor",
-        "error"
+        "error",
       );
     } finally {
       setSubmitting(false);
@@ -171,7 +213,7 @@ const AddDoctor = () => {
     <div className="p-6">
       <div className="flex items-center gap-4 mb-6">
         <button
-          onClick={() => navigate("/dashboard/doctor")}
+          onClick={() => navigate(-1)}
           className="p-2 rounded hover:bg-black/5 cursor-pointer"
           style={{ color: colors.text }}
         >
@@ -187,7 +229,7 @@ const AddDoctor = () => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="max-w-5xl">
+      <form onSubmit={handleSubmit} className="max-w-full">
         <div
           className="rounded-lg border p-6 shadow-sm"
           style={{
@@ -372,6 +414,35 @@ const AddDoctor = () => {
             >
               Hospital Information
             </h3>
+
+            {/* Hospital Dropdown */}
+            <div className="mb-6">
+              <label
+                className="block text-sm font-medium mb-2"
+                style={{ color: colors.textSecondary }}
+              >
+                Select Hospital *
+              </label>
+              <select
+                value={selectedHospitalId}
+                onChange={handleHospitalSelect}
+                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 bg-white/50 cursor-pointer"
+                style={{
+                  borderColor: colors.accent + "40",
+                  color: colors.text,
+                }}
+                required
+              >
+                <option value="">-- Select a Hospital --</option>
+                {hospitalList.map((hospital) => (
+                  <option key={hospital._id} value={hospital._id}>
+                    {hospital.name} - {hospital.city}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Auto-filled Hospital Details */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <label
@@ -384,15 +455,13 @@ const AddDoctor = () => {
                   type="text"
                   required
                   value={formData.hospitalName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, hospitalName: e.target.value })
-                  }
-                  className="w-full px-4 py-2.5 rounded border outline-none bg-white/50"
+                  readOnly
+                  className="w-full px-4 py-2.5 rounded border outline-none bg-gray-100 cursor-not-allowed"
                   style={{
                     borderColor: colors.accent + "40",
-                    color: colors.text,
+                    color: colors.textSecondary,
                   }}
-                  placeholder="e.g., Medanta"
+                  placeholder="Auto-filled from dropdown"
                 />
               </div>
               <div>
@@ -406,15 +475,13 @@ const AddDoctor = () => {
                   type="text"
                   required
                   value={formData.hospitalCity}
-                  onChange={(e) =>
-                    setFormData({ ...formData, hospitalCity: e.target.value })
-                  }
-                  className="w-full px-4 py-2.5 rounded border outline-none bg-white/50"
+                  readOnly
+                  className="w-full px-4 py-2.5 rounded border outline-none bg-gray-100 cursor-not-allowed"
                   style={{
                     borderColor: colors.accent + "40",
-                    color: colors.text,
+                    color: colors.textSecondary,
                   }}
-                  placeholder="e.g., Gurugram"
+                  placeholder="Auto-filled from dropdown"
                 />
               </div>
               <div>
@@ -427,18 +494,13 @@ const AddDoctor = () => {
                 <input
                   type="text"
                   value={formData.hospitalAccreditation}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      hospitalAccreditation: e.target.value,
-                    })
-                  }
-                  className="w-full px-4 py-2.5 rounded border outline-none bg-white/50"
+                  readOnly
+                  className="w-full px-4 py-2.5 rounded border outline-none bg-gray-100 cursor-not-allowed"
                   style={{
                     borderColor: colors.accent + "40",
-                    color: colors.text,
+                    color: colors.textSecondary,
                   }}
-                  placeholder="e.g., NABH, JCI (Comma separated)"
+                  placeholder="Auto-filled from dropdown"
                 />
               </div>
             </div>
