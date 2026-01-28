@@ -112,6 +112,7 @@ const Dashboard = () => {
       submenu: [
         { name: "Employee", path: "/dashboard/employee" },
         { name: "Manage Leads", path: "/dashboard/manage-leads" },
+        { name: "Follow Ups", path: "/dashboard/follow-ups" },
       ],
     },
     { name: "Profile", icon: MdPerson, path: "/dashboard/profile" },

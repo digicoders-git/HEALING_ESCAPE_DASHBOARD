@@ -15,7 +15,12 @@ import {
   MdAdd,
   MdSearch,
   MdVisibility,
+  MdCall,
+  MdLocationOn,
+  MdPerson,
+  MdInfo,
 } from "react-icons/md";
+import { FaWhatsapp } from "react-icons/fa";
 import Loader from "../components/ui/Loader";
 import LeadFormModal from "../components/LeadFormModal";
 import Swal from "sweetalert2";
@@ -23,7 +28,7 @@ import { useNavigate } from "react-router-dom";
 import ModernSelect from "../components/ModernSelect";
 
 const ManageLeads = () => {
-  const { colors } = useTheme();
+  const { colors, isDarkMode } = useTheme();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
@@ -97,7 +102,6 @@ const ManageLeads = () => {
         search: debouncedSearch,
       };
 
-      // Add filters only if not in special view modes
       if (viewMode === "all") {
         if (filters.source) params.source = filters.source;
         if (filters.leadStatus) params.leadStatus = filters.leadStatus;
@@ -174,23 +178,40 @@ const ManageLeads = () => {
   const getStatusBadge = (status) => {
     const s = status?.toLowerCase();
     const statusColors = {
-      new: "bg-blue-100 text-blue-700",
-      contacted: "bg-yellow-100 text-yellow-700",
-      "in-progress": "bg-indigo-100 text-indigo-700",
-      qualified: "bg-green-100 text-green-700",
-      lost: "bg-red-100 text-red-700",
-      won: "bg-emerald-100 text-emerald-700",
+      new: "bg-blue-100 text-blue-700 border-blue-200",
+      contacted: "bg-orange-100 text-orange-700 border-orange-200",
+      "in-progress": "bg-indigo-100 text-indigo-700 border-indigo-200",
+      converted: "bg-emerald-100 text-emerald-700 border-emerald-200",
+      closed: "bg-green-100 text-green-700 border-green-200",
+      negative: "bg-red-100 text-red-700 border-red-200",
     };
-    return statusColors[s] || "bg-gray-100 text-gray-700";
+    const colorClass =
+      statusColors[s] || "bg-gray-100 text-gray-700 border-gray-200";
+    return (
+      <span
+        className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border shadow-sm inline-block ${colorClass}`}
+      >
+        {s?.replace(/-/g, " ")}
+      </span>
+    );
   };
 
   const getSourceBadge = (source) => {
     const sourceColors = {
-      web: "bg-purple-100 text-purple-700",
-      admin: "bg-indigo-100 text-indigo-700",
-      employee: "bg-cyan-100 text-cyan-700",
+      web: "bg-purple-50 text-purple-600 border-purple-100",
+      admin: "bg-indigo-50 text-indigo-600 border-indigo-100",
+      employee: "bg-cyan-50 text-cyan-600 border-cyan-100",
     };
-    return sourceColors[source] || "bg-gray-100 text-gray-700";
+    const s = String(source).toLowerCase();
+    const colorClass =
+      sourceColors[s] || "bg-gray-50 text-gray-600 border-gray-100";
+    return (
+      <span
+        className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border ${colorClass}`}
+      >
+        {s}
+      </span>
+    );
   };
 
   const handleAssignLeads = async () => {
@@ -207,7 +228,7 @@ const ManageLeads = () => {
 
     Swal.fire({
       title: "Confirm Assignment",
-      html: `Assign <strong>${selectedLeads.length}</strong> lead(s) to:<br/><br/><strong>${employee?.name}</strong><br/>${employee?.phone}`,
+      html: `Assign <strong>${selectedLeads.length}</strong> lead(s) to:<br/><br/><strong>${employee?.name}</strong>`,
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -346,8 +367,10 @@ const ManageLeads = () => {
     { label: "All Status", value: "" },
     { label: "New", value: "new" },
     { label: "Contacted", value: "contacted" },
-    { label: "Qualified", value: "qualified" },
-    { label: "Lost", value: "lost" },
+    { label: "In-Progress", value: "in-progress" },
+    { label: "Converted", value: "converted" },
+    { label: "Closed", value: "closed" },
+    { label: "Negative", value: "negative" },
   ];
 
   const employeeOptions = [
@@ -358,6 +381,130 @@ const ManageLeads = () => {
     })),
   ];
 
+  const renderLeadCard = (item, index) => (
+    <div
+      key={item._id}
+      className="p-4 rounded-xl border mb-3 shadow-sm transition-all hover:shadow-md relative"
+      style={{
+        backgroundColor: colors.background,
+        borderColor: colors.accent + "30",
+      }}
+    >
+      <div className="absolute top-4 left-4">
+        <input
+          type="checkbox"
+          checked={selectedLeads.includes(item._id)}
+          onChange={() => handleSelectLead(item._id)}
+          className="w-5 h-5 cursor-pointer rounded"
+        />
+      </div>
+
+      <div className="pl-8 mb-4">
+        <div className="flex justify-between items-start">
+          <div>
+            <span className="text-xs opacity-60 block mb-1">
+              #{(pagination.page - 1) * pagination.limit + index + 1}
+            </span>
+            <h3
+              className="font-bold text-lg leading-tight"
+              style={{ color: colors.text }}
+            >
+              {item.fullName}
+            </h3>
+          </div>
+          <div className="flex flex-col items-end gap-1.5">
+            {getStatusBadge(item.leadStatus)}
+            {getSourceBadge(item.source)}
+          </div>
+        </div>
+
+        <div className="mt-4 space-y-2">
+          <div
+            className="flex items-center gap-2 text-sm"
+            style={{ color: colors.textSecondary }}
+          >
+            <MdLocationOn className="shrink-0" size={16} />
+            <span>
+              {item.city}, {item.country}
+            </span>
+          </div>
+          <div
+            className="flex items-center gap-2 text-sm"
+            style={{ color: colors.textSecondary }}
+          >
+            <MdInfo className="shrink-0" size={16} />
+            <span className="line-clamp-2">{item.clinicalRequirement}</span>
+          </div>
+          {item.assignedTo && (
+            <div className="flex items-center gap-2 text-sm font-semibold text-blue-600">
+              <MdPerson className="shrink-0" size={16} />
+              <span>{item.assignedTo.name}</span>
+            </div>
+          )}
+          <div
+            className="flex items-center gap-2 text-sm font-bold pt-1"
+            style={{ color: colors.text }}
+          >
+            <MdCall size={16} />
+            <span>
+              {item.countryCode} {item.mobile}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className="flex items-center justify-between pt-3 border-t"
+        style={{ borderColor: colors.accent + "15" }}
+      >
+        <div className="flex gap-2">
+          <a
+            href={`tel:${item.countryCode}${item.mobile}`}
+            className="p-2 rounded-lg bg-blue-50 text-blue-600"
+          >
+            <MdCall size={18} />
+          </a>
+          <a
+            href={`https://wa.me/${String(item.countryCode + item.mobile).replace(/\D/g, "")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 rounded-lg bg-green-50 text-green-600"
+          >
+            <FaWhatsapp size={18} />
+          </a>
+        </div>
+        <div className="flex gap-1.5">
+          <button
+            onClick={() => navigate(`/dashboard/manage-leads/view/${item._id}`)}
+            className="p-2 rounded-lg bg-emerald-50 text-emerald-600"
+          >
+            <MdVisibility size={18} />
+          </button>
+          <button
+            onClick={() => {
+              setEditingLead(item);
+              setShowCreateModal(true);
+            }}
+            className="p-2 rounded-lg bg-blue-50 text-blue-600"
+          >
+            <MdEdit size={18} />
+          </button>
+          <button
+            onClick={() => handleDelete(item._id)}
+            disabled={deletingId === item._id}
+            className="p-2 rounded-lg bg-red-50 text-red-600 disabled:opacity-50"
+          >
+            {deletingId === item._id ? (
+              <Loader size={18} />
+            ) : (
+              <MdDelete size={18} />
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen md:h-screen flex flex-col md:overflow-hidden">
       {/* Fixed Header and Filters */}
@@ -367,62 +514,78 @@ const ManageLeads = () => {
       >
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
-                Manage Leads
-              </h1>
-              {loading ? (
-                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-200 animate-pulse">
-                  <div className="w-4 h-4 rounded-full border-2 border-gray-400 border-t-transparent animate-spin"></div>
-                </div>
-              ) : (
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-sm"
+          <div className="w-full md:w-auto">
+            <div className="flex items-center justify-between md:justify-start gap-4">
+              <div className="flex items-center gap-3">
+                <h1
+                  className="text-xl md:text-2xl font-bold"
+                  style={{ color: colors.text }}
+                >
+                  Manage Leads
+                </h1>
+                {!loading && (
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-sm"
+                    style={{
+                      backgroundColor: colors.primary,
+                      color: colors.background,
+                    }}
+                  >
+                    {pagination.total}
+                  </div>
+                )}
+              </div>
+              <div className="md:hidden">
+                <button
+                  onClick={() => {
+                    setEditingLead(null);
+                    setShowCreateModal(true);
+                  }}
+                  className="p-2 rounded-lg shadow-sm"
                   style={{
-                    backgroundColor: colors.primary,
+                    backgroundColor: colors.text,
                     color: colors.background,
                   }}
-                  title="Total Leads"
                 >
-                  {pagination.total}
-                </div>
-              )}
+                  <MdAdd size={24} />
+                </button>
+              </div>
             </div>
 
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center gap-2 mt-2">
               {viewMode === "byEmployee" && (
-                <span className="text-xs font-semibold px-2 py-0.5 rounded bg-blue-100 text-blue-700">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-700 uppercase">
                   Employee View
                 </span>
               )}
               {viewMode === "unassigned" && (
-                <span className="text-xs font-semibold px-2 py-0.5 rounded bg-orange-100 text-orange-700">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-100 text-orange-700 uppercase tracking-wider">
                   Unassigned
                 </span>
               )}
               {selectedLeads.length > 0 && (
-                <span className="text-xs font-bold text-blue-600">
-                  ({selectedLeads.length} selected)
+                <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                  {selectedLeads.length} Selected
                 </span>
               )}
             </div>
           </div>
-          <div className="flex flex-wrap gap-2">
+
+          <div className="flex flex-wrap gap-2 w-full md:w-auto">
             {viewMode !== "all" && (
               <button
                 onClick={handleResetView}
-                className="flex items-center gap-2 px-4 py-2 rounded shadow transition-all hover:scale-105 active:scale-95 cursor-pointer bg-gray-600 text-white"
+                className="flex-1 md:flex-none px-4 py-2 rounded shadow-sm bg-gray-600 text-white text-xs font-bold uppercase tracking-wider"
               >
-                Reset View
+                Reset
               </button>
             )}
             {viewMode === "all" && (
               <button
                 onClick={handleShowUnassigned}
-                className="flex items-center gap-2 px-4 py-2 rounded shadow transition-all hover:scale-105 active:scale-95 cursor-pointer bg-orange-600 text-white"
+                className="flex-1 md:flex-none px-4 py-2 rounded shadow-sm bg-orange-600 text-white text-xs font-bold uppercase tracking-wider"
               >
-                Show Unassigned
+                Unassigned
               </button>
             )}
             {selectedLeads.length > 0 && (
@@ -430,16 +593,16 @@ const ManageLeads = () => {
                 <button
                   onClick={handleUnassignLeads}
                   disabled={unassigning}
-                  className="flex items-center gap-2 px-4 py-2 rounded shadow transition-all hover:scale-105 active:scale-95 cursor-pointer bg-red-600 text-white disabled:opacity-50"
+                  className="flex items-center justify-center gap-1 px-4 py-2 rounded shadow-sm bg-red-600 text-white text-xs font-bold uppercase disabled:opacity-50"
                 >
-                  {unassigning ? <Loader size={16} /> : <MdDelete size={20} />}
+                  {unassigning ? <Loader size={12} /> : <MdDelete size={16} />}{" "}
                   Unassign
                 </button>
                 <button
                   onClick={() => setShowAssignModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 rounded shadow transition-all hover:scale-105 active:scale-95 cursor-pointer bg-blue-600 text-white"
+                  className="flex-1 md:flex-none flex items-center justify-center gap-1 px-4 py-2 rounded shadow-sm bg-blue-600 text-white text-xs font-bold uppercase"
                 >
-                  <MdAdd size={20} /> Assign
+                  <MdAdd size={16} /> Assign
                 </button>
               </>
             )}
@@ -448,7 +611,7 @@ const ManageLeads = () => {
                 setEditingLead(null);
                 setShowCreateModal(true);
               }}
-              className="flex items-center gap-2 px-4 py-2 rounded shadow transition-all hover:scale-105 active:scale-95 cursor-pointer"
+              className="hidden md:flex items-center gap-2 px-6 py-2 rounded shadow-sm font-bold"
               style={{ backgroundColor: colors.text, color: colors.background }}
             >
               <MdAdd size={20} /> Create Lead
@@ -456,415 +619,265 @@ const ManageLeads = () => {
           </div>
         </div>
 
-        {/* Filters - Only show in "all" mode */}
-        {viewMode === "all" && (
-          <div className="flex flex-col md:flex-row gap-4">
-            {/* Search Input */}
-            <div className="relative flex-1">
-              <MdSearch
-                className="absolute left-3 top-3 z-10"
-                style={{ color: colors.textSecondary }}
-              />
-              <input
-                type="text"
-                placeholder="Search by name, country, city, mobile..."
-                value={filters.search}
-                onChange={(e) =>
-                  setFilters({ ...filters, search: e.target.value })
-                }
-                className="w-full pl-10 pr-4 py-[6px] rounded border outline-none focus:ring-1"
-                style={{
-                  backgroundColor: colors.background,
-                  borderColor: colors.accent + "40",
-                  color: colors.text,
-                }}
-              />
-            </div>
-
-            {/* Source Filter */}
-            <div className="w-full md:w-auto md:min-w-[150px]">
-              <ModernSelect
-                options={sourceOptions}
-                value={filters.source}
-                onChange={(value) => setFilters({ ...filters, source: value })}
-                placeholder="All Sources"
-              />
-            </div>
-
-            {/* Status Filter */}
-            <div className="w-full md:w-auto md:min-w-[150px]">
-              <ModernSelect
-                options={statusOptions}
-                value={filters.leadStatus}
-                onChange={(value) =>
-                  setFilters({ ...filters, leadStatus: value })
-                }
-                placeholder="All Status"
-              />
-            </div>
-
-            {/* Employee Filter */}
-            <div className="w-full md:w-auto md:min-w-[180px]">
-              <ModernSelect
-                options={employeeOptions}
-                value={filters.assignedTo}
-                onChange={(value) =>
-                  setFilters({ ...filters, assignedTo: value })
-                }
-                placeholder="All Employees"
-              />
-            </div>
+        {/* Filters */}
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="relative flex-1">
+            <MdSearch
+              className="absolute left-3 top-2.5 z-10 opacity-50"
+              style={{ color: colors.text }}
+            />
+            <input
+              type="text"
+              placeholder="Search leads..."
+              value={filters.search}
+              onChange={(e) =>
+                setFilters({ ...filters, search: e.target.value })
+              }
+              className="w-full pl-10 pr-4 py-2 rounded border focus:ring-1 outline-none text-sm transition-all"
+              style={{
+                backgroundColor: isDarkMode
+                  ? colors.accent + "10"
+                  : colors.background,
+                borderColor: colors.accent + "30",
+                color: colors.text,
+              }}
+            />
           </div>
-        )}
+
+          <div className="grid grid-cols-2 lg:flex gap-2 lg:w-auto">
+            <ModernSelect
+              options={sourceOptions}
+              value={filters.source}
+              onChange={(v) => setFilters({ ...filters, source: v })}
+              placeholder="Source"
+            />
+            <ModernSelect
+              options={statusOptions}
+              value={filters.leadStatus}
+              onChange={(v) => setFilters({ ...filters, leadStatus: v })}
+              placeholder="Status"
+            />
+          </div>
+        </div>
       </div>
 
-      {/* Scrollable Table */}
-      <div className="flex-1 px-4 md:px-6 pb-4 md:pb-6 flex flex-col min-h-0 md:overflow-hidden">
-        <div
-          className="md:flex-1 md:overflow-auto overflow-x-auto rounded-lg border shadow-sm relative"
-          style={{ borderColor: colors.accent + "30" }}
-        >
-          <table className="w-full text-left border-collapse">
-            <thead
-              className="sticky top-0 z-20"
-              style={{ backgroundColor: colors.background }}
-            >
-              <tr>
-                <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
-                  style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={isAllSelected}
-                    onChange={handleSelectAll}
-                    className="w-4 h-4 cursor-pointer"
-                  />
-                </th>
-                <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
-                  style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
-                  }}
-                >
-                  #
-                </th>
-                <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
-                  style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
-                  }}
-                >
-                  Full Name
-                </th>
-                <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
-                  style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
-                  }}
-                >
-                  Contact
-                </th>
-                <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
-                  style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
-                  }}
-                >
-                  Location
-                </th>
-                <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
-                  style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
-                  }}
-                >
-                  Clinical Req.
-                </th>
-                <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
-                  style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
-                  }}
-                >
-                  Source
-                </th>
-                <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
-                  style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
-                  }}
-                >
-                  Assigned To
-                </th>
-                <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
-                  style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
-                  }}
-                >
-                  Status
-                </th>
-                <th
-                  className="p-4 font-bold text-sm text-right sticky top-0 z-10 border-b"
-                  style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
-                  }}
-                >
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan="10" className="p-10 text-center">
-                    <div className="flex justify-center">
-                      <Loader size={40} />
-                    </div>
-                  </td>
-                </tr>
-              ) : data.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan="10"
-                    className="p-10 text-center font-medium"
-                    style={{ color: colors.textSecondary }}
+      {/* Main Content */}
+      <div className="flex-1 px-4 md:px-6 pb-4 md:pb-6 flex flex-col overflow-hidden min-h-0">
+        <div className="flex-1 overflow-auto custom-scrollbar">
+          {loading ? (
+            <div className="h-full flex items-center justify-center">
+              <Loader size={48} />
+            </div>
+          ) : data.length === 0 ? (
+            <div className="h-full flex flex-col items-center justify-center opacity-40 gap-2">
+              <MdInfo size={64} />
+              <p className="font-bold uppercase tracking-widest text-sm">
+                No data available
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Desktop Table */}
+              <div
+                className="hidden md:block rounded-xl border overflow-hidden"
+                style={{ borderColor: colors.accent + "20" }}
+              >
+                <table className="w-full text-left border-collapse">
+                  <thead
+                    className="sticky top-0 z-20"
+                    style={{ backgroundColor: colors.background }}
                   >
-                    No leads found.
-                  </td>
-                </tr>
-              ) : (
-                data.map((item, index) => (
-                  <tr
-                    key={item._id}
-                    className="border-b last:border-0 transition-colors"
-                    style={{
-                      borderColor: colors.accent + "20",
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor =
-                        colors.accent + "10")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.backgroundColor = "transparent")
-                    }
-                  >
-                    <td className="p-4">
-                      <input
-                        type="checkbox"
-                        checked={selectedLeads.includes(item._id)}
-                        onChange={() => handleSelectLead(item._id)}
-                        className="w-4 h-4 cursor-pointer"
-                      />
-                    </td>
-                    <td
-                      className="p-4 text-sm"
-                      style={{ color: colors.textSecondary }}
+                    <tr
+                      className="border-b"
+                      style={{ borderColor: colors.accent + "20" }}
                     >
-                      {(pagination.page - 1) * pagination.limit + index + 1}
-                    </td>
-                    <td
-                      className="p-4 font-medium"
-                      style={{ color: colors.text }}
-                    >
-                      {item.fullName}
-                    </td>
-                    <td
-                      className="p-4 text-sm"
-                      style={{ color: colors.textSecondary }}
-                    >
-                      <div className="whitespace-nowrap">
-                        {item.countryCode} {item.mobile}
-                      </div>
-                    </td>
-                    <td
-                      className="p-4 text-sm"
-                      style={{ color: colors.textSecondary }}
-                    >
-                      <div>
-                        {item.city}, {item.country}
-                      </div>
-                    </td>
-                    <td
-                      className="p-4 text-sm"
-                      style={{ color: colors.textSecondary }}
-                    >
-                      <div className="max-w-xs truncate">
-                        {item.clinicalRequirement}
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <span
-                        className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider whitespace-nowrap ${getSourceBadge(
-                          item.source,
-                        )}`}
+                      <th className="p-4 w-10">
+                        <input
+                          type="checkbox"
+                          checked={isAllSelected}
+                          onChange={handleSelectAll}
+                          className="w-4 h-4 rounded cursor-pointer"
+                        />
+                      </th>
+                      <th className="p-4 font-bold text-xs opacity-60">#</th>
+                      <th className="p-4 font-bold text-xs opacity-60">
+                        LEAD DETAILS
+                      </th>
+                      <th className="p-4 font-bold text-xs opacity-60">
+                        LOCATION
+                      </th>
+                      <th className="p-4 font-bold text-xs opacity-60">
+                        REQUIREMENT
+                      </th>
+                      <th className="p-4 font-bold text-xs opacity-60">
+                        SOURCE
+                      </th>
+                      <th className="p-4 font-bold text-xs opacity-60">
+                        ASSIGNED TO
+                      </th>
+                      <th className="p-4 font-bold text-xs opacity-60 text-center">
+                        STATUS
+                      </th>
+                      <th className="p-4 font-bold text-xs opacity-60 text-right">
+                        ACTIONS
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((item, index) => (
+                      <tr
+                        key={item._id}
+                        className="border-b last:border-0 hover:bg-black/5"
+                        style={{ borderColor: colors.accent + "10" }}
                       >
-                        {item.source}
-                      </span>
-                    </td>
-                    <td
-                      className="p-4 text-sm"
-                      style={{ color: colors.textSecondary }}
-                    >
-                      {item.assignedTo ? (
-                        <div
-                          onClick={() =>
-                            handleEmployeeClick(item.assignedTo._id)
-                          }
-                          className="cursor-pointer hover:underline"
-                          title="View employee details"
-                        >
-                          <div className="font-semibold text-blue-600 whitespace-nowrap">
-                            {item.assignedTo.name}
+                        <td className="p-4">
+                          <input
+                            type="checkbox"
+                            checked={selectedLeads.includes(item._id)}
+                            onChange={() => handleSelectLead(item._id)}
+                            className="w-4 h-4 rounded cursor-pointer"
+                          />
+                        </td>
+                        <td className="p-4 text-xs opacity-60">
+                          {(pagination.page - 1) * pagination.limit + index + 1}
+                        </td>
+                        <td className="p-4">
+                          <div className="font-bold text-sm">
+                            {item.fullName}
                           </div>
-                          <div className="text-xs uppercase opacity-70">
-                            {item.assignedTo.department}
+                          <div className="text-xs opacity-60">
+                            {item.countryCode} {item.mobile}
                           </div>
-                        </div>
-                      ) : (
-                        <span className="italic opacity-50">Unassigned</span>
-                      )}
-                    </td>
-                    <td className="p-4">
-                      <div className="flex justify-center">
-                        <span
-                          className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider whitespace-nowrap inline-flex items-center justify-center min-w-[100px] shadow-sm ${getStatusBadge(
-                            item.leadStatus,
-                          )}`}
-                        >
-                          {item.leadStatus}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() =>
-                            navigate(`/dashboard/manage-leads/view/${item._id}`)
-                          }
-                          className="p-2 rounded hover:bg-green-100 text-green-600 transition-colors cursor-pointer"
-                          title="View"
-                        >
-                          <MdVisibility size={18} />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setEditingLead(item);
-                            setShowCreateModal(true);
-                          }}
-                          className="p-2 rounded hover:bg-blue-100 text-blue-600 transition-colors cursor-pointer"
-                          title="Edit"
-                        >
-                          <MdEdit size={18} />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(item._id)}
-                          disabled={deletingId === item._id}
-                          className="p-2 rounded hover:bg-red-100 text-red-600 transition-colors cursor-pointer disabled:opacity-50"
-                          title="Delete"
-                        >
-                          {deletingId === item._id ? (
-                            <Loader size={18} color="#dc2626" />
+                        </td>
+                        <td className="p-4 text-xs opacity-80">
+                          {item.city}, {item.country}
+                        </td>
+                        <td className="p-4 text-xs opacity-80 max-w-[200px] truncate">
+                          {item.clinicalRequirement}
+                        </td>
+                        <td className="p-4">{getSourceBadge(item.source)}</td>
+                        <td className="p-4">
+                          {item.assignedTo ? (
+                            <div
+                              onClick={() =>
+                                handleEmployeeClick(item.assignedTo._id)
+                              }
+                              className="cursor-pointer group"
+                            >
+                              <div className="font-bold text-xs text-blue-600 group-hover:underline">
+                                {item.assignedTo.name}
+                              </div>
+                              <div className="text-[10px] opacity-60 uppercase">
+                                {item.assignedTo.department}
+                              </div>
+                            </div>
                           ) : (
-                            <MdDelete size={18} />
+                            <span className="text-xs opacity-40 italic">
+                              Not Assigned
+                            </span>
                           )}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                        </td>
+                        <td className="p-4 text-center">
+                          {getStatusBadge(item.leadStatus)}
+                        </td>
+                        <td className="p-4">
+                          <div className="flex items-center justify-end gap-1">
+                            <button
+                              onClick={() =>
+                                navigate(
+                                  `/dashboard/manage-leads/view/${item._id}`,
+                                )
+                              }
+                              className="p-2 rounded hover:bg-emerald-50 text-emerald-600"
+                            >
+                              <MdVisibility size={18} />
+                            </button>
+                            <button
+                              onClick={() => {
+                                setEditingLead(item);
+                                setShowCreateModal(true);
+                              }}
+                              className="p-2 rounded hover:bg-blue-50 text-blue-600"
+                            >
+                              <MdEdit size={18} />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(item._id)}
+                              disabled={deletingId === item._id}
+                              className="p-2 rounded hover:bg-red-50 text-red-600"
+                            >
+                              {deletingId === item._id ? (
+                                <Loader size={18} />
+                              ) : (
+                                <MdDelete size={18} />
+                              )}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Cards */}
+              <div className="md:hidden space-y-3 pb-4">
+                {data.map((item, index) => renderLeadCard(item, index))}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Pagination */}
         {!loading && data.length > 0 && (
-          <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-4 pb-10 md:pb-0">
-            <span className="text-sm" style={{ color: colors.textSecondary }}>
-              Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
-              {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
-              of {pagination.total} entries
-            </span>
-            <div className="flex gap-2 flex-wrap justify-center">
+          <div className="shrink-0 flex flex-col md:flex-row items-center justify-between mt-4 gap-4">
+            <p className="text-xs font-bold opacity-40 uppercase tracking-widest">
+              Showing {data.length} of {pagination.total}
+            </p>
+            <div className="flex items-center gap-1">
               <button
                 disabled={pagination.page === 1}
                 onClick={() =>
                   setPagination({ ...pagination, page: pagination.page - 1 })
                 }
-                className={`px-3 py-1 rounded border text-sm transition-all cursor-pointer ${
-                  pagination.page === 1
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-black/5"
-                }`}
+                className="px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase transition-all active:scale-95 disabled:opacity-20 translate-y-0 active:translate-y-0.5"
                 style={{
                   borderColor: colors.accent + "30",
                   color: colors.text,
                 }}
               >
-                Previous
+                Prev
               </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (pageNum) => (
+              <div className="flex gap-1">
+                {[...Array(totalPages)].map((_, i) => (
                   <button
-                    key={pageNum}
+                    key={i}
                     onClick={() =>
-                      setPagination({ ...pagination, page: pageNum })
+                      setPagination({ ...pagination, page: i + 1 })
                     }
-                    className={`px-3 py-1 rounded border text-sm transition-all cursor-pointer ${
-                      pagination.page === pageNum
-                        ? "font-bold"
-                        : "hover:bg-black/5"
-                    }`}
+                    className={`w-8 h-8 rounded-lg text-[10px] font-bold transition-all active:scale-90 ${pagination.page === i + 1 ? "shadow-md" : "border"}`}
                     style={{
-                      borderColor: colors.accent + "30",
                       backgroundColor:
-                        pagination.page === pageNum
+                        pagination.page === i + 1
                           ? colors.primary
                           : "transparent",
                       color:
-                        pagination.page === pageNum
+                        pagination.page === i + 1
                           ? colors.background
                           : colors.text,
+                      borderColor: colors.accent + "30",
                     }}
                   >
-                    {pageNum}
+                    {i + 1}
                   </button>
-                ),
-              )}
+                ))}
+              </div>
               <button
-                disabled={pagination.page === totalPages || totalPages === 0}
+                disabled={pagination.page === totalPages}
                 onClick={() =>
                   setPagination({ ...pagination, page: pagination.page + 1 })
                 }
-                className={`px-3 py-1 rounded border text-sm transition-all cursor-pointer ${
-                  pagination.page === totalPages || totalPages === 0
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-black/5"
-                }`}
+                className="px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase transition-all active:scale-95 disabled:opacity-20"
                 style={{
                   borderColor: colors.accent + "30",
                   color: colors.text,
@@ -877,95 +890,80 @@ const ManageLeads = () => {
         )}
       </div>
 
+      {/* Modals */}
       <LeadFormModal
         isOpen={showCreateModal}
-        onClose={() => {
-          setShowCreateModal(false);
-          setEditingLead(null);
-        }}
+        onClose={() => setShowCreateModal(false)}
         initialData={editingLead}
         onSuccess={fetchLeads}
       />
 
-      {/* Assign Leads Modal */}
+      {/* Assign Modal */}
       {showAssignModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 backdrop-blur-sm bg-black/40">
           <div
-            className="rounded-lg p-6 max-w-md w-full"
-            style={{
-              backgroundColor: colors.background,
-              borderColor: colors.accent + "30",
-            }}
+            className="w-full max-w-sm rounded-[32px] p-6 shadow-2xl"
+            style={{ backgroundColor: colors.background }}
           >
-            <h2
-              className="text-2xl font-bold mb-4"
-              style={{ color: colors.text }}
-            >
-              Assign Leads to Employee
-            </h2>
-            <p className="text-sm mb-4" style={{ color: colors.textSecondary }}>
-              Selected Leads:{" "}
-              <span className="font-bold">{selectedLeads.length}</span>
-            </p>
-
             <div className="mb-6">
-              <label
-                className="block text-sm font-medium mb-2"
+              <h2
+                className="text-2xl font-black tracking-tight mb-2"
+                style={{ color: colors.text }}
+              >
+                Assign Leads
+              </h2>
+              <p
+                className="text-sm opacity-60 font-bold"
                 style={{ color: colors.textSecondary }}
               >
-                Select Employee *
+                Assigning {selectedLeads.length} leads
+              </p>
+            </div>
+
+            <div className="mb-8">
+              <label
+                className="block text-xs font-black uppercase tracking-widest mb-3 opacity-60"
+                style={{ color: colors.text }}
+              >
+                Select Employee
               </label>
               <ModernSelect
-                options={employees.map((emp) => ({
-                  label: `${emp.name} - ${emp.phone}`,
-                  value: emp._id,
-                }))}
+                options={employeeOptions.filter((o) => o.value !== "")}
                 value={selectedEmployee}
-                onChange={(value) => setSelectedEmployee(value)}
-                placeholder="Choose an employee"
+                onChange={setSelectedEmployee}
+                placeholder="Search employee..."
               />
             </div>
 
-            <div className="flex justify-end gap-4">
+            <div className="flex gap-3">
               <button
-                type="button"
-                onClick={() => {
-                  setShowAssignModal(false);
-                  setSelectedEmployee("");
-                }}
-                className="px-6 py-2.5 rounded font-medium transition-colors cursor-pointer"
-                style={{
-                  backgroundColor: colors.accent + "20",
-                  color: colors.text,
-                }}
+                onClick={() => setShowAssignModal(false)}
+                className="flex-1 py-4 rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg active:scale-95 transition-all text-gray-500 bg-gray-100"
               >
                 Cancel
               </button>
               <button
                 onClick={handleAssignLeads}
                 disabled={assigning || !selectedEmployee}
-                className="flex items-center gap-2 px-6 py-2.5 rounded font-medium shadow transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                style={{
-                  backgroundColor: colors.primary,
-                  color: colors.background,
-                }}
+                className="flex-1 py-4 rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg active:scale-95 transition-all text-white disabled:opacity-50"
+                style={{ backgroundColor: colors.primary }}
               >
-                {assigning ? (
-                  <>
-                    <Loader size={20} />
-                    Assigning...
-                  </>
-                ) : (
-                  <>
-                    <MdAdd size={20} />
-                    Assign Leads
-                  </>
-                )}
+                {assigning ? <Loader size={16} /> : "Complete"}
               </button>
             </div>
           </div>
         </div>
       )}
+
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: ${isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}; border-radius: 10px; }
+      `,
+        }}
+      />
     </div>
   );
 };

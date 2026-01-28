@@ -32,6 +32,7 @@ import EditEmployee from "../pages/EditEmployee";
 import ViewEmployee from "../pages/ViewEmployee";
 import ManageLeads from "../pages/ManageLeads";
 import ViewLead from "../pages/ViewLead";
+import FollowUps from "../pages/FollowUps";
 
 export const AppRoute = [
   { path: "profile", component: Profile },
@@ -68,4 +69,5 @@ export const AppRoute = [
   { path: "employee/view/:id", component: ViewEmployee },
   { path: "manage-leads", component: ManageLeads },
   { path: "manage-leads/view/:id", component: ViewLead },
+  { path: "follow-ups", component: FollowUps },
 ];

@@ -44,3 +44,18 @@ export const getLeadsByEmployee = async (employeeId, params) => {
   const response = await http.get(`/lead/by-employee/${employeeId}`, { params });
   return response.data;
 };
+
+export const addFollowUp = async (data) => {
+  const response = await http.post("/followup/add", data);
+  return response.data;
+};
+
+export const markFollowUpDone = async (id) => {
+  const response = await http.patch(`/followup/done/${id}`);
+  return response.data;
+};
+
+export const getAllFollowUps = async (params) => {
+  const response = await http.get("/followup/all", { params });
+  return response.data;
+};
