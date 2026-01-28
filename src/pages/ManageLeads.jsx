@@ -516,7 +516,7 @@ const ManageLeads = () => {
       </div>
 
       {/* Scrollable Table */}
-      <div className="flex-1 px-4 md:px-6 pb-4 md:pb-6 flex flex-col">
+      <div className="flex-1 px-4 md:px-6 pb-4 md:pb-6 flex flex-col min-h-0 md:overflow-hidden">
         <div
           className="md:flex-1 md:overflow-auto overflow-x-auto rounded-lg border shadow-sm relative"
           style={{ borderColor: colors.accent + "30" }}

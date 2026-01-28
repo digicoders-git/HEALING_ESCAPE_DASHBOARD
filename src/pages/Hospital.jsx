@@ -264,7 +264,7 @@ const Hospital = () => {
       </div>
 
       {/* Scrollable Table */}
-      <div className="flex-1 px-4 md:px-6 pb-4 md:pb-6 flex flex-col">
+      <div className="flex-1 px-4 md:px-6 pb-4 md:pb-6 flex flex-col min-h-0 md:overflow-hidden">
         <div
           className="md:flex-1 md:overflow-auto overflow-x-auto rounded-lg border shadow-sm relative"
           style={{ borderColor: colors.accent + "30" }}
@@ -463,76 +463,81 @@ const Hospital = () => {
             </tbody>
           </table>
         </div>
-      </div>
-
-      {/* Pagination */}
-      {!loading && data.length > 0 && (
-        <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-4 px-4 md:px-0">
-          <span className="text-sm" style={{ color: colors.textSecondary }}>
-            Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
-            {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
-            {pagination.total} entries
-          </span>
-          <div className="flex gap-2 flex-wrap justify-center">
-            <button
-              disabled={pagination.page === 1}
-              onClick={() =>
-                setPagination({ ...pagination, page: pagination.page - 1 })
-              }
-              className={`px-3 py-1 rounded border text-sm transition-all cursor-pointer ${
-                pagination.page === 1
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-black/5"
-              }`}
-              style={{ borderColor: colors.accent + "30", color: colors.text }}
-            >
-              Previous
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-              (pageNum) => (
-                <button
-                  key={pageNum}
-                  onClick={() =>
-                    setPagination({ ...pagination, page: pageNum })
-                  }
-                  className={`px-3 py-1 rounded border text-sm transition-all cursor-pointer ${
-                    pagination.page === pageNum
-                      ? "font-bold"
-                      : "hover:bg-black/5"
-                  }`}
-                  style={{
-                    borderColor: colors.accent + "30",
-                    backgroundColor:
+        {/* Pagination */}
+        {!loading && data.length > 0 && (
+          <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-4 px-4 md:px-0">
+            <span className="text-sm" style={{ color: colors.textSecondary }}>
+              Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
+              {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
+              of {pagination.total} entries
+            </span>
+            <div className="flex gap-2 flex-wrap justify-center">
+              <button
+                disabled={pagination.page === 1}
+                onClick={() =>
+                  setPagination({ ...pagination, page: pagination.page - 1 })
+                }
+                className={`px-3 py-1 rounded border text-sm transition-all cursor-pointer ${
+                  pagination.page === 1
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-black/5"
+                }`}
+                style={{
+                  borderColor: colors.accent + "30",
+                  color: colors.text,
+                }}
+              >
+                Previous
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (pageNum) => (
+                  <button
+                    key={pageNum}
+                    onClick={() =>
+                      setPagination({ ...pagination, page: pageNum })
+                    }
+                    className={`px-3 py-1 rounded border text-sm transition-all cursor-pointer ${
                       pagination.page === pageNum
-                        ? colors.primary
-                        : "transparent",
-                    color:
-                      pagination.page === pageNum
-                        ? colors.background
-                        : colors.text,
-                  }}
-                >
-                  {pageNum}
-                </button>
-              ),
-            )}
-            <button
-              disabled={pagination.page === totalPages}
-              onClick={() =>
-                setPagination({ ...pagination, page: pagination.page + 1 })
-              }
-              className={`px-3 py-1 rounded border text-sm transition-all cursor-pointer ${
-                pagination.page === totalPages
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-black/5"
-              }`}
-              style={{ borderColor: colors.accent + "30", color: colors.text }}
-            >
-              Next
-            </button>
+                        ? "font-bold"
+                        : "hover:bg-black/5"
+                    }`}
+                    style={{
+                      borderColor: colors.accent + "30",
+                      backgroundColor:
+                        pagination.page === pageNum
+                          ? colors.primary
+                          : "transparent",
+                      color:
+                        pagination.page === pageNum
+                          ? colors.background
+                          : colors.text,
+                    }}
+                  >
+                    {pageNum}
+                  </button>
+                ),
+              )}
+              <button
+                disabled={pagination.page === totalPages || totalPages === 0}
+                onClick={() =>
+                  setPagination({ ...pagination, page: pagination.page + 1 })
+                }
+                className={`px-3 py-1 rounded border text-sm transition-all cursor-pointer ${
+                  pagination.page === totalPages || totalPages === 0
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-black/5"
+                }`}
+                style={{
+                  borderColor: colors.accent + "30",
+                  color: colors.text,
+                }}
+              >
+                Next
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
