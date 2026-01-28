@@ -172,13 +172,16 @@ const ManageLeads = () => {
   };
 
   const getStatusBadge = (status) => {
+    const s = status?.toLowerCase();
     const statusColors = {
       new: "bg-blue-100 text-blue-700",
       contacted: "bg-yellow-100 text-yellow-700",
+      "in-progress": "bg-indigo-100 text-indigo-700",
       qualified: "bg-green-100 text-green-700",
       lost: "bg-red-100 text-red-700",
+      won: "bg-emerald-100 text-emerald-700",
     };
-    return statusColors[status] || "bg-gray-100 text-gray-700";
+    return statusColors[s] || "bg-gray-100 text-gray-700";
   };
 
   const getSourceBadge = (source) => {
@@ -693,7 +696,7 @@ const ManageLeads = () => {
                       className="p-4 text-sm"
                       style={{ color: colors.textSecondary }}
                     >
-                      <div>
+                      <div className="whitespace-nowrap">
                         {item.countryCode} {item.mobile}
                       </div>
                     </td>
@@ -715,7 +718,7 @@ const ManageLeads = () => {
                     </td>
                     <td className="p-4">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-semibold ${getSourceBadge(
+                        className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider whitespace-nowrap ${getSourceBadge(
                           item.source,
                         )}`}
                       >
@@ -734,25 +737,27 @@ const ManageLeads = () => {
                           className="cursor-pointer hover:underline"
                           title="View employee details"
                         >
-                          <div className="font-semibold text-blue-600">
+                          <div className="font-semibold text-blue-600 whitespace-nowrap">
                             {item.assignedTo.name}
                           </div>
-                          <div className="text-xs">
+                          <div className="text-xs uppercase opacity-70">
                             {item.assignedTo.department}
                           </div>
                         </div>
                       ) : (
-                        <span className="italic">Unassigned</span>
+                        <span className="italic opacity-50">Unassigned</span>
                       )}
                     </td>
                     <td className="p-4">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusBadge(
-                          item.leadStatus,
-                        )}`}
-                      >
-                        {item.leadStatus}
-                      </span>
+                      <div className="flex justify-center">
+                        <span
+                          className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider whitespace-nowrap inline-flex items-center justify-center min-w-[100px] shadow-sm ${getStatusBadge(
+                            item.leadStatus,
+                          )}`}
+                        >
+                          {item.leadStatus}
+                        </span>
+                      </div>
                     </td>
                     <td className="p-4 text-right">
                       <div className="flex items-center justify-end gap-2">
