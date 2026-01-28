@@ -191,7 +191,6 @@ const EditBlog = () => {
                   Title
                 </label>
                 <input
-                  required
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
@@ -212,7 +211,6 @@ const EditBlog = () => {
                   Category
                 </label>
                 <input
-                  required
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
@@ -235,7 +233,6 @@ const EditBlog = () => {
                 Excerpt (Short Description)
               </label>
               <textarea
-                required
                 name="excerpt"
                 value={formData.excerpt}
                 onChange={handleChange}
@@ -258,7 +255,6 @@ const EditBlog = () => {
                 Introduction
               </label>
               <textarea
-                required
                 name="introduction"
                 value={formData.introduction}
                 onChange={handleChange}
@@ -281,7 +277,6 @@ const EditBlog = () => {
                 Content
               </label>
               <textarea
-                required
                 name="content"
                 value={formData.content}
                 onChange={handleChange}
@@ -304,7 +299,6 @@ const EditBlog = () => {
                 Why This Matters
               </label>
               <textarea
-                required
                 name="whyThisMatters"
                 value={formData.whyThisMatters}
                 onChange={handleChange}

@@ -367,11 +367,10 @@ const AddDoctor = () => {
                 className="block text-sm font-medium mb-2"
                 style={{ color: colors.textSecondary }}
               >
-                Qualification *
+                Qualification
               </label>
               <input
                 type="text"
-                required
                 value={formData.qualification}
                 onChange={(e) =>
                   setFormData({ ...formData, qualification: e.target.value })
@@ -390,11 +389,10 @@ const AddDoctor = () => {
                 className="block text-sm font-medium mb-2"
                 style={{ color: colors.textSecondary }}
               >
-                Designation *
+                Designation
               </label>
               <input
                 type="text"
-                required
                 value={formData.designation}
                 onChange={(e) =>
                   setFormData({ ...formData, designation: e.target.value })
@@ -430,7 +428,7 @@ const AddDoctor = () => {
                 className="block text-sm font-medium mb-2"
                 style={{ color: colors.textSecondary }}
               >
-                Select Hospital *
+                Select Hospital
               </label>
               <select
                 value={selectedHospitalId}
@@ -441,7 +439,6 @@ const AddDoctor = () => {
                   borderColor: colors.accent + "40",
                   color: colors.text,
                 }}
-                required
               >
                 <option value="">-- Select a Hospital --</option>
                 {hospitalList.map((hospital) => (
@@ -459,11 +456,10 @@ const AddDoctor = () => {
                   className="block text-sm font-medium mb-2"
                   style={{ color: colors.textSecondary }}
                 >
-                  Hospital Name *
+                  Hospital Name
                 </label>
                 <input
                   type="text"
-                  required
                   value={formData.hospitalName}
                   readOnly
                   className="w-full px-4 py-2.5 rounded border outline-none cursor-not-allowed opacity-70"
@@ -480,11 +476,10 @@ const AddDoctor = () => {
                   className="block text-sm font-medium mb-2"
                   style={{ color: colors.textSecondary }}
                 >
-                  City *
+                  City
                 </label>
                 <input
                   type="text"
-                  required
                   value={formData.hospitalCity}
                   readOnly
                   className="w-full px-4 py-2.5 rounded border outline-none cursor-not-allowed opacity-70"
@@ -524,11 +519,10 @@ const AddDoctor = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: colors.textSecondary }}
             >
-              Short Summary *
+              Short Summary
             </label>
             <input
               type="text"
-              required
               value={formData.summary}
               onChange={(e) =>
                 setFormData({ ...formData, summary: e.target.value })
@@ -548,10 +542,9 @@ const AddDoctor = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: colors.textSecondary }}
             >
-              Detailed About *
+              Detailed About
             </label>
             <textarea
-              required
               rows={4}
               value={formData.about}
               onChange={(e) =>

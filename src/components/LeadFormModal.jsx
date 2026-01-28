@@ -1,112 +1,102 @@
 import React, { useState, useEffect } from "react";
 import { useTheme } from "../context/ThemeContext";
-import { getEnquiryById, updateEnquiry } from "../apis/enquiry";
-import { MdArrowBack, MdSave } from "react-icons/md";
-import Loader from "../components/ui/Loader";
+import { createLead, updateFreeConsultation } from "../apis/freeConsultation";
+import Loader from "./ui/Loader";
 import Swal from "sweetalert2";
-import { useNavigate, useParams } from "react-router-dom";
 
-const EditEnquiry = () => {
+const LeadFormModal = ({ isOpen, onClose, initialData, onSuccess }) => {
   const { colors } = useTheme();
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     country: "",
-    email: "",
-    phone: "",
-    preferredCity: "",
-    message: "",
+    city: "",
+    countryCode: "+91",
+    mobile: "",
+    clinicalRequirement: "",
   });
 
   useEffect(() => {
-    fetchDetail();
-  }, [id]);
-
-  const fetchDetail = async () => {
-    try {
-      setLoading(true);
-      const response = await getEnquiryById(id);
-      if (response.success) {
-        const data = response.data;
+    if (isOpen) {
+      if (initialData) {
         setFormData({
-          fullName: data.fullName,
-          country: data.country,
-          email: data.email,
-          phone: data.phone,
-          preferredCity: data.preferredCity,
-          message: data.message,
+          fullName: initialData.fullName || "",
+          country: initialData.country || "",
+          city: initialData.city || "",
+          countryCode: initialData.countryCode || "+91",
+          mobile: initialData.mobile || "",
+          clinicalRequirement: initialData.clinicalRequirement || "",
+        });
+      } else {
+        setFormData({
+          fullName: "",
+          country: "",
+          city: "",
+          countryCode: "+91",
+          mobile: "",
+          clinicalRequirement: "",
         });
       }
+    }
+  }, [isOpen, initialData]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      let response;
+      if (initialData) {
+        response = await updateFreeConsultation(initialData._id, formData);
+      } else {
+        response = await createLead(formData);
+      }
+
+      if (response.success) {
+        Swal.fire({
+          title: "Success",
+          text: initialData
+            ? "Lead updated successfully"
+            : "Lead created successfully",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+          background: colors.background,
+          color: colors.text,
+        });
+        if (onSuccess) onSuccess();
+        onClose();
+      }
     } catch (error) {
-      console.error("Error fetching data:", error);
-      Swal.fire("Error", "Failed to fetch details", "error");
-      navigate("/dashboard/enquiry");
+      console.error("Error saving lead:", error);
+      Swal.fire({
+        title: "Error",
+        text: error.response?.data?.message || "Failed to save lead",
+        icon: "error",
+        background: colors.background,
+        color: colors.text,
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setSubmitting(true);
-      const response = await updateEnquiry(id, formData);
-      if (response.success) {
-        Swal.fire("Success", "Enquiry updated successfully!", "success");
-        navigate("/dashboard/enquiry");
-      }
-    } catch (error) {
-      console.error("Error updating:", error);
-      Swal.fire("Error", "Failed to update details", "error");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-full p-10">
-        <Loader size={60} />
-      </div>
-    );
-  }
+  if (!isOpen) return null;
 
   return (
-    <div className="p-6">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-6">
-        <button
-          onClick={() => navigate("/dashboard/enquiry")}
-          className="p-2 rounded transition-colors hover:bg-black/5 cursor-pointer"
-          style={{ color: colors.text }}
-        >
-          <MdArrowBack size={24} />
-        </button>
-        <div>
-          <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
-            Edit Enquiry
-          </h1>
-          <p className="text-sm" style={{ color: colors.textSecondary }}>
-            Update enquiry information
-          </p>
-        </div>
-      </div>
-
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="max-w-4xl">
-        <div
-          className="rounded-lg border p-6 shadow-sm"
-          style={{
-            backgroundColor: colors.background,
-            borderColor: colors.accent + "30",
-          }}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Full Name */}
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div
+        className="rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        style={{
+          backgroundColor: colors.background,
+          borderColor: colors.accent + "30",
+        }}
+      >
+        <h2 className="text-2xl font-bold mb-4" style={{ color: colors.text }}>
+          {initialData ? "Edit Lead" : "Create New Lead"}
+        </h2>
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label
                 className="block text-sm font-medium mb-2"
@@ -127,66 +117,10 @@ const EditEnquiry = () => {
                   borderColor: colors.accent + "40",
                   color: colors.text,
                 }}
+                placeholder="Enter full name"
               />
             </div>
 
-            {/* Email */}
-            <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.textSecondary }}
-              >
-                Email Address *
-              </label>
-              <input
-                type="email"
-                required
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-2"
-                style={{
-                  backgroundColor: colors.background,
-                  borderColor: colors.accent + "40",
-                  color: colors.text,
-                }}
-              />
-            </div>
-
-            {/* Phone */}
-            <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.textSecondary }}
-              >
-                Phone Number *
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.phone}
-                onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
-                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-2"
-                style={{
-                  backgroundColor: colors.background,
-                  borderColor:
-                    formData.phone.length > 15
-                      ? "#ef4444"
-                      : colors.accent + "40",
-                  color: colors.text,
-                }}
-              />
-              {formData.phone.length > 15 && (
-                <p className="text-xs text-red-500 mt-1">
-                  Warning: Contact detail exceeds 15 digits.
-                </p>
-              )}
-            </div>
-
-            {/* Country */}
             <div>
               <label
                 className="block text-sm font-medium mb-2"
@@ -207,23 +141,23 @@ const EditEnquiry = () => {
                   borderColor: colors.accent + "40",
                   color: colors.text,
                 }}
+                placeholder="Enter country"
               />
             </div>
 
-            {/* Preferred City */}
             <div>
               <label
                 className="block text-sm font-medium mb-2"
                 style={{ color: colors.textSecondary }}
               >
-                Preferred City *
+                City *
               </label>
               <input
                 type="text"
                 required
-                value={formData.preferredCity}
+                value={formData.city}
                 onChange={(e) =>
-                  setFormData({ ...formData, preferredCity: e.target.value })
+                  setFormData({ ...formData, city: e.target.value })
                 }
                 className="w-full px-4 py-2.5 rounded border outline-none focus:ring-2"
                 style={{
@@ -231,23 +165,74 @@ const EditEnquiry = () => {
                   borderColor: colors.accent + "40",
                   color: colors.text,
                 }}
+                placeholder="Enter city"
               />
             </div>
 
-            {/* Message */}
+            <div>
+              <label
+                className="block text-sm font-medium mb-2"
+                style={{ color: colors.textSecondary }}
+              >
+                Country Code *
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.countryCode}
+                onChange={(e) =>
+                  setFormData({ ...formData, countryCode: e.target.value })
+                }
+                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-2"
+                style={{
+                  backgroundColor: colors.background,
+                  borderColor: colors.accent + "40",
+                  color: colors.text,
+                }}
+                placeholder="+91"
+              />
+            </div>
+
+            <div>
+              <label
+                className="block text-sm font-medium mb-2"
+                style={{ color: colors.textSecondary }}
+              >
+                Mobile *
+              </label>
+              <input
+                type="tel"
+                required
+                value={formData.mobile}
+                onChange={(e) =>
+                  setFormData({ ...formData, mobile: e.target.value })
+                }
+                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-2"
+                style={{
+                  backgroundColor: colors.background,
+                  borderColor: colors.accent + "40",
+                  color: colors.text,
+                }}
+                placeholder="Enter mobile number"
+              />
+            </div>
+
             <div className="md:col-span-2">
               <label
                 className="block text-sm font-medium mb-2"
                 style={{ color: colors.textSecondary }}
               >
-                Message *
+                Clinical Requirement *
               </label>
               <textarea
                 required
-                rows={4}
-                value={formData.message}
+                rows={3}
+                value={formData.clinicalRequirement}
                 onChange={(e) =>
-                  setFormData({ ...formData, message: e.target.value })
+                  setFormData({
+                    ...formData,
+                    clinicalRequirement: e.target.value,
+                  })
                 }
                 className="w-full px-4 py-2.5 rounded border outline-none focus:ring-2"
                 style={{
@@ -255,15 +240,15 @@ const EditEnquiry = () => {
                   borderColor: colors.accent + "40",
                   color: colors.text,
                 }}
+                placeholder="Enter clinical requirement"
               />
             </div>
           </div>
 
-          {/* Submit Button */}
-          <div className="flex justify-end gap-4 mt-8">
+          <div className="flex justify-end gap-4 mt-6">
             <button
               type="button"
-              onClick={() => navigate("/dashboard/enquiry")}
+              onClick={onClose}
               className="px-6 py-2.5 rounded font-medium transition-colors cursor-pointer"
               style={{
                 backgroundColor: colors.accent + "20",
@@ -274,30 +259,29 @@ const EditEnquiry = () => {
             </button>
             <button
               type="submit"
-              disabled={submitting}
+              disabled={loading}
               className="flex items-center gap-2 px-6 py-2.5 rounded font-medium shadow transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               style={{
                 backgroundColor: colors.primary,
                 color: colors.background,
               }}
             >
-              {submitting ? (
+              {loading ? (
                 <>
                   <Loader size={20} />
-                  Updating...
+                  Saving...
                 </>
+              ) : initialData ? (
+                "Update Lead"
               ) : (
-                <>
-                  <MdSave size={20} />
-                  Update Details
-                </>
+                "Create Lead"
               )}
             </button>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };
 
-export default EditEnquiry;
+export default LeadFormModal;

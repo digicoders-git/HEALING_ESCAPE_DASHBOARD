@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useTheme } from "../context/ThemeContext";
 import {
-  getHospitals,
-  deleteHospital,
-  updateHospitalStatus,
-} from "../apis/hospital";
+  getEmployees,
+  deleteEmployee,
+  toggleEmployeeStatus,
+} from "../apis/employee";
 import {
   MdEdit,
   MdDelete,
@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import ModernSelect from "../components/ModernSelect";
 import Toggle from "../components/ui/Toggle";
 
-const Hospital = () => {
+const Employees = () => {
   const { colors } = useTheme();
   const navigate = useNavigate();
 
@@ -29,66 +29,48 @@ const Hospital = () => {
     limit: 10,
     total: 0,
   });
-  const [filters, setFilters] = useState({
-    search: "",
-    city: "",
-    speciality: "",
-    isActive: "",
-  });
-  const [debouncedFilters, setDebouncedFilters] = useState({
-    search: "",
-    city: "",
-    speciality: "",
-  });
+  const [filters, setFilters] = useState({ search: "", isActive: "" });
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedFilters({
-        search: filters.search,
-        city: filters.city,
-        speciality: filters.speciality,
-      });
+      setDebouncedSearch(filters.search);
     }, 500);
     return () => clearTimeout(handler);
-  }, [filters.search, filters.city, filters.speciality]);
+  }, [filters.search]);
 
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, page: 1 }));
-  }, [debouncedFilters, filters.isActive]);
+    fetchEmployees();
+  }, [pagination.page, debouncedSearch, filters.isActive]);
 
-  useEffect(() => {
-    fetchHospitals();
-  }, [
-    pagination.page,
-    debouncedFilters.search,
-    debouncedFilters.city,
-    debouncedFilters.speciality,
-    filters.isActive,
-  ]);
-
-  const fetchHospitals = async () => {
+  const fetchEmployees = async () => {
     try {
       setLoading(true);
       const params = {
         page: pagination.page,
         limit: pagination.limit,
+        search: debouncedSearch,
       };
+      if (filters.isActive !== "") {
+        params.isActive = filters.isActive;
+      }
 
-      if (debouncedFilters.search) params.search = debouncedFilters.search;
-      if (debouncedFilters.city) params.city = debouncedFilters.city;
-      if (debouncedFilters.speciality)
-        params.speciality = debouncedFilters.speciality;
-      if (filters.isActive !== "") params.isActive = filters.isActive;
-
-      const response = await getHospitals(params);
+      const response = await getEmployees(params);
       if (response.success) {
-        setData(response.hospitals || []);
-        setPagination((prev) => ({ ...prev, total: response.total || 0 }));
+        setData(response.data || []);
+        setPagination({
+          page: response.page || pagination.page,
+          limit: pagination.limit,
+          total: response.total || 0,
+          pages:
+            response.pages ||
+            Math.ceil((response.total || 0) / pagination.limit),
+        });
       }
     } catch (error) {
-      console.error("Error fetching hospitals:", error);
-      Swal.fire("Error", "Failed to fetch hospitals", "error");
+      console.error("Error fetching employees:", error);
+      Swal.fire("Error", "Failed to fetch employees", "error");
     } finally {
       setLoading(false);
     }
@@ -109,19 +91,19 @@ const Hospital = () => {
       if (result.isConfirmed) {
         try {
           setDeletingId(id);
-          await deleteHospital(id);
+          await deleteEmployee(id);
           Swal.fire({
             title: "Deleted!",
-            text: "Hospital has been deleted.",
+            text: "Employee has been deleted.",
             icon: "success",
             background: colors.background,
             color: colors.text,
           });
-          fetchHospitals();
+          fetchEmployees();
         } catch (error) {
           Swal.fire({
             title: "Error",
-            text: "Failed to delete hospital",
+            text: "Failed to delete employee",
             icon: "error",
             background: colors.background,
             color: colors.text,
@@ -135,8 +117,8 @@ const Hospital = () => {
 
   const handleStatusUpdate = async (id) => {
     try {
-      await updateHospitalStatus(id);
-      fetchHospitals();
+      await toggleEmployeeStatus(id);
+      fetchEmployees();
       const toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -161,10 +143,10 @@ const Hospital = () => {
     }
   };
 
-  const handleImageClick = (imageUrl, title) => {
+  const handleImageClick = (imageUrl, name) => {
     Swal.fire({
       imageUrl: imageUrl,
-      imageAlt: title,
+      imageAlt: name,
       showConfirmButton: false,
       showCloseButton: true,
       width: "auto",
@@ -172,13 +154,24 @@ const Hospital = () => {
     });
   };
 
-  const totalPages = Math.ceil(pagination.total / pagination.limit);
+  const totalPages = pagination.pages || 0;
 
   const statusOptions = [
     { label: "All Status", value: "" },
     { label: "Active", value: "true" },
     { label: "Inactive", value: "false" },
   ];
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "Never";
+    return new Date(dateString).toLocaleString("en-IN", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   return (
     <div className="min-h-screen md:h-screen flex flex-col md:overflow-hidden">
@@ -192,7 +185,7 @@ const Hospital = () => {
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
-                Hospitals
+                Employees
               </h1>
               {loading ? (
                 <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-200 animate-pulse">
@@ -205,44 +198,41 @@ const Hospital = () => {
                     backgroundColor: colors.primary,
                     color: colors.background,
                   }}
-                  title="Total Hospitals"
+                  title="Total Employees"
                 >
                   {pagination.total}
                 </div>
               )}
             </div>
             <p className="text-sm" style={{ color: colors.textSecondary }}>
-              Manage all hospitals and medical centers
+              Manage all CRM employees
             </p>
           </div>
           <button
-            onClick={() => navigate("/dashboard/hospital/add")}
+            onClick={() => navigate("/dashboard/employee/add")}
             className="flex items-center gap-2 px-4 py-2 rounded shadow transition-all hover:scale-105 active:scale-95 cursor-pointer"
-            style={{
-              backgroundColor: colors.primary,
-              color: colors.background,
-            }}
+            style={{ backgroundColor: colors.text, color: colors.background }}
           >
-            <MdAdd size={20} /> Add Hospital
+            <MdAdd size={20} /> Add Employee
           </button>
         </div>
 
         {/* Filters */}
-        <div className="flex gap-4">
-          {/* 🔍 Search - 80% width */}
-          <div className="relative w-full">
+        <div className="flex flex-col md:flex-row gap-4">
+          {/* Search Input */}
+          <div className="relative flex-1">
             <MdSearch
               className="absolute left-3 top-3 z-10"
               style={{ color: colors.textSecondary }}
             />
             <input
               type="text"
-              placeholder="Search by hospital name, city, about, description, specialities, accreditations, departments"
+              placeholder="Search employee by name, email or phone..."
               value={filters.search}
               onChange={(e) =>
                 setFilters({ ...filters, search: e.target.value })
               }
-              className="w-full pl-10 pr-4 py-[6px] rounded border outline-none focus:ring-1 transition-all"
+              className="w-full pl-10 pr-4 py-[6px] rounded border outline-none focus:ring-1"
               style={{
                 backgroundColor: colors.background,
                 borderColor: colors.accent + "40",
@@ -251,8 +241,8 @@ const Hospital = () => {
             />
           </div>
 
-          {/* 🟢 Status - auto width */}
-          <div className="w-fit">
+          {/* Status Filter */}
+          <div className="w-full md:w-auto md:min-w-[180px]">
             <ModernSelect
               options={statusOptions}
               value={filters.isActive}
@@ -293,7 +283,7 @@ const Hospital = () => {
                     borderColor: colors.primary + "30",
                   }}
                 >
-                  Image
+                  Profile
                 </th>
                 <th
                   className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
@@ -313,7 +303,7 @@ const Hospital = () => {
                     borderColor: colors.primary + "30",
                   }}
                 >
-                  City
+                  Contact
                 </th>
                 <th
                   className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
@@ -323,7 +313,37 @@ const Hospital = () => {
                     borderColor: colors.primary + "30",
                   }}
                 >
-                  Specialities
+                  Role
+                </th>
+                <th
+                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
+                  style={{
+                    color: colors.text,
+                    backgroundColor: colors.background,
+                    borderColor: colors.primary + "30",
+                  }}
+                >
+                  Last Login
+                </th>
+                <th
+                  className="p-4 font-bold text-sm text-center sticky top-0 z-10 border-b"
+                  style={{
+                    color: colors.text,
+                    backgroundColor: colors.background,
+                    borderColor: colors.primary + "30",
+                  }}
+                >
+                  Leads Assigned
+                </th>
+                <th
+                  className="p-4 font-bold text-sm text-center sticky top-0 z-10 border-b"
+                  style={{
+                    color: colors.text,
+                    backgroundColor: colors.background,
+                    borderColor: colors.primary + "30",
+                  }}
+                >
+                  Leads Closed
                 </th>
                 <th
                   className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
@@ -350,7 +370,7 @@ const Hospital = () => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="7" className="p-10 text-center">
+                  <td colSpan="10" className="p-10 text-center">
                     <div className="flex justify-center">
                       <Loader size={40} />
                     </div>
@@ -359,11 +379,11 @@ const Hospital = () => {
               ) : data.length === 0 ? (
                 <tr>
                   <td
-                    colSpan="7"
+                    colSpan="10"
                     className="p-10 text-center font-medium"
                     style={{ color: colors.textSecondary }}
                   >
-                    No hospitals found.
+                    No employees found.
                   </td>
                 </tr>
               ) : (
@@ -390,32 +410,67 @@ const Hospital = () => {
                     </td>
                     <td className="p-4">
                       <img
-                        src={item.image}
+                        src={
+                          item.profilePhoto?.url ||
+                          "https://via.placeholder.com/150"
+                        }
                         alt={item.name}
-                        className="w-12 h-12 rounded object-cover border cursor-pointer hover:opacity-80 transition-opacity"
+                        className="w-12 h-12 rounded-full object-cover border cursor-pointer hover:opacity-80 transition-opacity"
                         style={{ borderColor: colors.accent + "20" }}
-                        onClick={() => handleImageClick(item.image, item.name)}
+                        onClick={() =>
+                          handleImageClick(item.profilePhoto?.url, item.name)
+                        }
                       />
                     </td>
                     <td
                       className="p-4 font-medium"
                       style={{ color: colors.text }}
                     >
-                      {item.name}
+                      <div>
+                        <div className="font-bold">{item.name}</div>
+                        <div className="text-xs opacity-70">{item.email}</div>
+                      </div>
                     </td>
                     <td
                       className="p-4 text-sm"
                       style={{ color: colors.textSecondary }}
                     >
-                      {item.city}
+                      {item.phone}
                     </td>
                     <td
-                      className="p-4 text-sm max-w-xs truncate"
+                      className="p-4 text-sm"
                       style={{ color: colors.textSecondary }}
                     >
-                      {Array.isArray(item.specialities)
-                        ? item.specialities.join(", ")
-                        : item.specialities}
+                      <div className="font-semibold">{item.designation}</div>
+                      <div className="text-xs italic">{item.department}</div>
+                    </td>
+                    <td
+                      className="p-4 text-xs"
+                      style={{ color: colors.textSecondary }}
+                    >
+                      {formatDate(item.lastLogin)}
+                    </td>
+                    <td
+                      className="p-4 text-center"
+                      style={{ color: colors.text }}
+                    >
+                      <span
+                        className="font-bold text-lg"
+                        style={{ color: colors.primary }}
+                      >
+                        {item.totalLeadsAssigned || 0}
+                      </span>
+                    </td>
+                    <td
+                      className="p-4 text-center"
+                      style={{ color: colors.text }}
+                    >
+                      <span
+                        className="font-bold text-lg"
+                        style={{ color: colors.primary }}
+                      >
+                        {item.totalLeadsClosed || 0}
+                      </span>
                     </td>
                     <td className="p-4">
                       <Toggle
@@ -427,7 +482,7 @@ const Hospital = () => {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() =>
-                            navigate(`/dashboard/hospital/view/${item._id}`)
+                            navigate(`/dashboard/employee/view/${item._id}`)
                           }
                           className="p-2 rounded hover:bg-green-100 text-green-600 transition-colors cursor-pointer"
                           title="View"
@@ -436,7 +491,7 @@ const Hospital = () => {
                         </button>
                         <button
                           onClick={() =>
-                            navigate(`/dashboard/hospital/edit/${item._id}`)
+                            navigate(`/dashboard/employee/edit/${item._id}`)
                           }
                           className="p-2 rounded hover:bg-blue-100 text-blue-600 transition-colors cursor-pointer"
                           title="Edit"
@@ -517,12 +572,12 @@ const Hospital = () => {
               ),
             )}
             <button
-              disabled={pagination.page === totalPages}
+              disabled={pagination.page === totalPages || totalPages === 0}
               onClick={() =>
                 setPagination({ ...pagination, page: pagination.page + 1 })
               }
               className={`px-3 py-1 rounded border text-sm transition-all cursor-pointer ${
-                pagination.page === totalPages
+                pagination.page === totalPages || totalPages === 0
                   ? "opacity-50 cursor-not-allowed"
                   : "hover:bg-black/5"
               }`}
@@ -537,4 +592,4 @@ const Hospital = () => {
   );
 };
 
-export default Hospital;
+export default Employees;

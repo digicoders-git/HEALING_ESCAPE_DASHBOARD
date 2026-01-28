@@ -19,3 +19,28 @@ export const deleteFreeConsultation = async (id) => {
   const response = await http.delete(`/free-consultation/delete/${id}`);
   return response.data;
 };
+
+export const createLead = async (data) => {
+  const response = await http.post("/free-consultation/admin/create", data);
+  return response.data;
+};
+
+export const assignLeads = async (data) => {
+  const response = await http.post("/lead/assign", data);
+  return response.data;
+};
+
+export const unassignLeads = async (data) => {
+  const response = await http.post("/lead/unassign", data);
+  return response.data;
+};
+
+export const getUnassignedLeads = async (params) => {
+  const response = await http.get("/lead/unassigned", { params });
+  return response.data;
+};
+
+export const getLeadsByEmployee = async (employeeId, params) => {
+  const response = await http.get(`/lead/by-employee/${employeeId}`, { params });
+  return response.data;
+};

@@ -112,7 +112,7 @@ const Enquiry = () => {
   const totalPages = Math.ceil(pagination.total / pagination.limit);
 
   return (
-    <div className="p-6 min-h-screen">
+    <div className="p-4 md:p-6 min-h-screen">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <div>
@@ -185,12 +185,12 @@ const Enquiry = () => {
               >
                 Country
               </th>
-              <th
+              {/* <th
                 className="p-4 font-semibold text-sm"
                 style={{ color: colors.textSecondary }}
               >
                 Preferred City
-              </th>
+              </th> */}
               <th
                 className="p-4 font-semibold text-sm"
                 style={{ color: colors.textSecondary }}
@@ -252,15 +252,28 @@ const Enquiry = () => {
                   <td className="p-4 text-sm" style={{ color: colors.text }}>
                     {item.email}
                   </td>
-                  <td className="p-4 text-sm" style={{ color: colors.text }}>
+                  <td
+                    className="p-4 text-sm"
+                    style={{
+                      color: item.phone?.length > 15 ? "#ef4444" : colors.text,
+                    }}
+                    title={
+                      item.phone?.length > 15 ? "Invalid contact detail" : ""
+                    }
+                  >
                     {item.phone}
+                    {item.phone?.length > 15 && (
+                      <span className="block text-[10px] font-bold">
+                        &gt; 15 digits
+                      </span>
+                    )}
                   </td>
                   <td className="p-4 text-sm" style={{ color: colors.text }}>
                     {item.country}
                   </td>
-                  <td className="p-4 text-sm" style={{ color: colors.text }}>
+                  {/* <td className="p-4 text-sm" style={{ color: colors.text }}>
                     {item.preferredCity}
-                  </td>
+                  </td> */}
                   <td
                     className="p-4 text-sm max-w-xs truncate"
                     style={{ color: colors.textSecondary }}
@@ -310,7 +323,7 @@ const Enquiry = () => {
 
       {/* Pagination */}
       {!loading && data.length > 0 && (
-        <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-4 pb-10 md:pb-0">
           <span className="text-sm" style={{ color: colors.textSecondary }}>
             Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
             {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}

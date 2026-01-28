@@ -128,11 +128,6 @@ const AddHospital = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.image) {
-      Swal.fire("Error", "Please upload a hospital image", "error");
-      return;
-    }
-
     try {
       setSubmitting(true);
       const data = new FormData();
@@ -203,7 +198,7 @@ const AddHospital = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: colors.textSecondary }}
             >
-              Hospital Image *
+              Hospital Image
             </label>
             <div className="flex items-center gap-4">
               {imagePreview && (
@@ -286,10 +281,9 @@ const AddHospital = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: colors.textSecondary }}
             >
-              About Hospital *
+              About Hospital
             </label>
             <textarea
-              required
               rows={3}
               value={formData.about}
               onChange={(e) =>
@@ -310,10 +304,9 @@ const AddHospital = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: colors.textSecondary }}
             >
-              Full Description *
+              Full Description
             </label>
             <textarea
-              required
               rows={4}
               value={formData.description}
               onChange={(e) =>

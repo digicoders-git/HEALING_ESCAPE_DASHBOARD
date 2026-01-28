@@ -1,98 +1,20 @@
 import React, { useState } from "react";
 import { useTheme } from "../context/ThemeContext";
 import { createSpeciality } from "../apis/speciality";
-import { MdArrowBack, MdSave, MdImage, MdClose } from "react-icons/md";
+import { MdArrowBack, MdSave, MdImage } from "react-icons/md";
 import Loader from "../components/ui/Loader";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-
-const TagInput = ({
-  label,
-  list,
-  setList,
-  input,
-  setInput,
-  placeholder,
-  colors,
-}) => {
-  const handleAddTag = (e) => {
-    if (e.key === "Enter" && input.trim()) {
-      e.preventDefault();
-      if (!list.includes(input.trim())) {
-        setList([...list, input.trim()]);
-      }
-      setInput("");
-    }
-  };
-
-  const handleRemoveTag = (indexToRemove) => {
-    setList(list.filter((_, index) => index !== indexToRemove));
-  };
-
-  return (
-    <div className="mt-6">
-      <label
-        className="block text-sm font-medium mb-2"
-        style={{ color: colors.textSecondary }}
-      >
-        {label} (Press Enter to add)
-      </label>
-      <div
-        className="w-full px-4 py-2.5 rounded border min-h-[50px] flex flex-wrap gap-2 items-center"
-        style={{
-          backgroundColor: colors.background,
-          borderColor: colors.accent + "40",
-        }}
-      >
-        {list.map((tag, index) => (
-          <span
-            key={index}
-            className="px-3 py-1 rounded-full text-sm flex items-center gap-2 border"
-            style={{
-              backgroundColor: colors.primary + "20",
-              borderColor: colors.primary + "40",
-              color: colors.text,
-            }}
-          >
-            {tag}
-            <button
-              type="button"
-              onClick={() => handleRemoveTag(index)}
-              className="hover:bg-black/10 rounded-full p-0.5 cursor-pointer"
-            >
-              <MdClose size={14} />
-            </button>
-          </span>
-        ))}
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleAddTag}
-          className="flex-1 min-w-[150px] outline-none bg-transparent"
-          style={{ color: colors.text }}
-          placeholder={list.length === 0 ? placeholder : "Add more..."}
-        />
-      </div>
-    </div>
-  );
-};
 
 const AddSpeciality = () => {
   const { colors } = useTheme();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
-  const [whenRecommendedTags, setWhenRecommendedTags] = useState([]);
-  const [tagInput, setTagInput] = useState("");
 
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    whatIs: "",
-    procedure: "",
-    recovery: "",
-    costRange: "",
     image: null,
   });
 
@@ -112,23 +34,13 @@ const AddSpeciality = () => {
       return;
     }
 
-    if (whenRecommendedTags.length === 0) {
-      Swal.fire("Error", "Please add at least one recommendation", "error");
-      return;
-    }
-
     try {
       setSubmitting(true);
 
       const data = new FormData();
       data.append("title", formData.title);
       data.append("description", formData.description);
-      data.append("whatIs", formData.whatIs);
-      data.append("procedure", formData.procedure);
-      data.append("recovery", formData.recovery);
-      data.append("costRange", formData.costRange);
       data.append("image", formData.image);
-      data.append("whenRecommended", JSON.stringify(whenRecommendedTags));
 
       const response = await createSpeciality(data);
 
@@ -142,7 +54,7 @@ const AddSpeciality = () => {
         Swal.fire(
           "Error",
           error.response.data.message || "Failed to create speciality",
-          "error"
+          "error",
         );
       } else {
         Swal.fire("Error", "Failed to create speciality", "error");
@@ -218,7 +130,7 @@ const AddSpeciality = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-6">
             {/* Title */}
             <div>
               <label
@@ -244,20 +156,20 @@ const AddSpeciality = () => {
               />
             </div>
 
-            {/* Cost Range */}
+            {/* Description */}
             <div>
               <label
                 className="block text-sm font-medium mb-2"
                 style={{ color: colors.textSecondary }}
               >
-                Cost Range *
+                Description *
               </label>
-              <input
-                type="text"
+              <textarea
                 required
-                value={formData.costRange}
+                rows={5}
+                value={formData.description}
                 onChange={(e) =>
-                  setFormData({ ...formData, costRange: e.target.value })
+                  setFormData({ ...formData, description: e.target.value })
                 }
                 className="w-full px-4 py-2.5 rounded border outline-none focus:ring-2"
                 style={{
@@ -265,120 +177,9 @@ const AddSpeciality = () => {
                   borderColor: colors.accent + "40",
                   color: colors.text,
                 }}
-                placeholder="e.g., 5000-8000"
+                placeholder="Brief description of the speciality"
               />
             </div>
-          </div>
-
-          {/* Description */}
-          <div className="mt-6">
-            <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: colors.textSecondary }}
-            >
-              Description *
-            </label>
-            <textarea
-              required
-              rows={3}
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              className="w-full px-4 py-2.5 rounded border outline-none focus:ring-2"
-              style={{
-                backgroundColor: colors.background,
-                borderColor: colors.accent + "40",
-                color: colors.text,
-              }}
-              placeholder="Brief description of the speciality"
-            />
-          </div>
-
-          {/* What Is */}
-          <div className="mt-6">
-            <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: colors.textSecondary }}
-            >
-              What Is *
-            </label>
-            <textarea
-              required
-              rows={3}
-              value={formData.whatIs}
-              onChange={(e) =>
-                setFormData({ ...formData, whatIs: e.target.value })
-              }
-              className="w-full px-4 py-2.5 rounded border outline-none focus:ring-2"
-              style={{
-                backgroundColor: colors.background,
-                borderColor: colors.accent + "40",
-                color: colors.text,
-              }}
-              placeholder="Detailed explanation of what this speciality is"
-            />
-          </div>
-
-          {/* When Recommended - extracted TagInput */}
-          <TagInput
-            label="When Recommended *"
-            list={whenRecommendedTags}
-            setList={setWhenRecommendedTags}
-            input={tagInput}
-            setInput={setTagInput}
-            placeholder="e.g., Chest pain"
-            colors={colors}
-          />
-
-          {/* Procedure */}
-          <div className="mt-6">
-            <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: colors.textSecondary }}
-            >
-              Procedure *
-            </label>
-            <textarea
-              required
-              rows={3}
-              value={formData.procedure}
-              onChange={(e) =>
-                setFormData({ ...formData, procedure: e.target.value })
-              }
-              className="w-full px-4 py-2.5 rounded border outline-none focus:ring-2"
-              style={{
-                backgroundColor: colors.background,
-                borderColor: colors.accent + "40",
-                color: colors.text,
-              }}
-              placeholder="Description of the procedure"
-            />
-          </div>
-
-          {/* Recovery */}
-          <div className="mt-6">
-            <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: colors.textSecondary }}
-            >
-              Recovery *
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.recovery}
-              onChange={(e) =>
-                setFormData({ ...formData, recovery: e.target.value })
-              }
-              className="w-full px-4 py-2.5 rounded border outline-none focus:ring-2"
-              style={{
-                backgroundColor: colors.background,
-                borderColor: colors.accent + "40",
-                color: colors.text,
-              }}
-              placeholder="e.g., 4-6 weeks"
-            />
           </div>
 
           {/* Submit Button */}

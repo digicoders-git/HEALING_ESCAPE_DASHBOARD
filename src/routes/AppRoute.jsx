@@ -23,12 +23,15 @@ import Video from "../pages/Video";
 import AddVideo from "../pages/AddVideo";
 import EditVideo from "../pages/EditVideo";
 import ViewVideo from "../pages/ViewVideo";
-import FreeConsultation from "../pages/FreeConsultation";
-import EditFreeConsultation from "../pages/EditFreeConsultation";
-import ViewFreeConsultation from "../pages/ViewFreeConsultation";
 import Enquiry from "../pages/Enquiry";
 import EditEnquiry from "../pages/EditEnquiry";
 import ViewEnquiry from "../pages/ViewEnquiry";
+import Employees from "../pages/Employees";
+import AddEmployee from "../pages/AddEmployee";
+import EditEmployee from "../pages/EditEmployee";
+import ViewEmployee from "../pages/ViewEmployee";
+import ManageLeads from "../pages/ManageLeads";
+import ViewLead from "../pages/ViewLead";
 
 export const AppRoute = [
   { path: "profile", component: Profile },
@@ -56,10 +59,13 @@ export const AppRoute = [
   { path: "video/add", component: AddVideo },
   { path: "video/edit/:id", component: EditVideo },
   { path: "video/view/:id", component: ViewVideo },
-  { path: "free-consultation", component: FreeConsultation },
-  { path: "free-consultation/edit/:id", component: EditFreeConsultation },
-  { path: "free-consultation/view/:id", component: ViewFreeConsultation },
   { path: "enquiry", component: Enquiry },
   { path: "enquiry/edit/:id", component: EditEnquiry },
   { path: "enquiry/view/:id", component: ViewEnquiry },
+  { path: "employee", component: Employees },
+  { path: "employee/add", component: AddEmployee },
+  { path: "employee/edit/:id", component: EditEmployee },
+  { path: "employee/view/:id", component: ViewEmployee },
+  { path: "manage-leads", component: ManageLeads },
+  { path: "manage-leads/view/:id", component: ViewLead },
 ];

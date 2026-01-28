@@ -148,7 +148,6 @@ const EditGallery = () => {
                 Category
               </label>
               <input
-                required
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
@@ -170,7 +169,6 @@ const EditGallery = () => {
                 Caption
               </label>
               <textarea
-                required
                 name="caption"
                 value={formData.caption}
                 onChange={handleChange}

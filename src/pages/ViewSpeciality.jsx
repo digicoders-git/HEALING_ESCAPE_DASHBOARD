@@ -22,7 +22,7 @@ const ViewSpeciality = () => {
       setLoading(true);
       const response = await getSpecialityById(id);
       if (response.success) {
-        setData(response.speciality);
+        setData(response.data || response.speciality);
       }
     } catch (error) {
       console.error("Error fetching speciality:", error);
@@ -48,7 +48,7 @@ const ViewSpeciality = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full p-10">
+      <div className="flex items-center justify-center min-h-[400px]">
         <Loader size={60} />
       </div>
     );
@@ -123,12 +123,6 @@ const ViewSpeciality = () => {
                   {data.isActive ? "Active" : "Inactive"}
                 </span>
               </div>
-              <p
-                className="text-sm mb-2"
-                style={{ color: colors.textSecondary }}
-              >
-                <strong>Cost Range:</strong> {data.costRange}
-              </p>
               <p className="text-sm" style={{ color: colors.textSecondary }}>
                 <strong>Created:</strong>{" "}
                 {new Date(data.createdAt).toLocaleDateString("en-IN", {
@@ -140,7 +134,7 @@ const ViewSpeciality = () => {
             </div>
           </div>
 
-          {/* Details Grid */}
+          {/* Details */}
           <div className="space-y-6">
             {/* Description */}
             <div>
@@ -150,73 +144,11 @@ const ViewSpeciality = () => {
               >
                 Description
               </h3>
-              <p className="text-base" style={{ color: colors.text }}>
+              <p
+                className="text-base whitespace-pre-wrap"
+                style={{ color: colors.text }}
+              >
                 {data.description}
-              </p>
-            </div>
-
-            {/* What Is */}
-            <div>
-              <h3
-                className="text-sm font-semibold mb-2 uppercase tracking-wide"
-                style={{ color: colors.textSecondary }}
-              >
-                What Is
-              </h3>
-              <p className="text-base" style={{ color: colors.text }}>
-                {data.whatIs}
-              </p>
-            </div>
-
-            {/* When Recommended */}
-            <div>
-              <h3
-                className="text-sm font-semibold mb-2 uppercase tracking-wide"
-                style={{ color: colors.textSecondary }}
-              >
-                When Recommended
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {Array.isArray(data.whenRecommended) &&
-                  data.whenRecommended.map((item, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 rounded-full text-sm border"
-                      style={{
-                        backgroundColor: colors.accent + "10",
-                        borderColor: colors.accent + "30",
-                        color: colors.text,
-                      }}
-                    >
-                      {item}
-                    </span>
-                  ))}
-              </div>
-            </div>
-
-            {/* Procedure */}
-            <div>
-              <h3
-                className="text-sm font-semibold mb-2 uppercase tracking-wide"
-                style={{ color: colors.textSecondary }}
-              >
-                Procedure
-              </h3>
-              <p className="text-base" style={{ color: colors.text }}>
-                {data.procedure}
-              </p>
-            </div>
-
-            {/* Recovery */}
-            <div>
-              <h3
-                className="text-sm font-semibold mb-2 uppercase tracking-wide"
-                style={{ color: colors.textSecondary }}
-              >
-                Recovery Time
-              </h3>
-              <p className="text-base" style={{ color: colors.text }}>
-                {data.recovery}
               </p>
             </div>
           </div>

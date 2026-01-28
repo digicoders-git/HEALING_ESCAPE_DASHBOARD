@@ -18,18 +18,19 @@ import {
   MdChatBubble,
   MdQuestionAnswer,
   MdOutlineFormatListNumberedRtl,
+  MdBusiness,
 } from "react-icons/md";
 
 import { Clock } from "./Clock";
 import logoo from "../assets/logo.png";
 import landLogoo from "../assets/landLogoo.png";
-import { Settings } from "lucide-react";
+import { Settings, ChevronDown } from "lucide-react";
 import Swal from "sweetalert2";
 
 const Dashboard = () => {
   const { colors, isDarkMode, toggleTheme, currentTheme, themes, setTheme } =
     useTheme();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState(null);
   const location = useLocation();
@@ -100,14 +101,18 @@ const Dashboard = () => {
     { name: "Gallery", icon: MdOutlineCollections, path: "/dashboard/gallery" },
     { name: "Videos", icon: MdOutlineVideoLibrary, path: "/dashboard/video" },
     {
-      name: "Free Consultation",
-      icon: MdChatBubble,
-      path: "/dashboard/free-consultation",
-    },
-    {
       name: "Enquiry",
       icon: MdQuestionAnswer,
       path: "/dashboard/enquiry",
+    },
+    {
+      name: "CRM",
+      icon: MdBusiness,
+      path: "#",
+      submenu: [
+        { name: "Employee", path: "/dashboard/employee" },
+        { name: "Manage Leads", path: "/dashboard/manage-leads" },
+      ],
     },
     { name: "Profile", icon: MdPerson, path: "/dashboard/profile" },
   ];
@@ -168,7 +173,7 @@ const Dashboard = () => {
                     onClick={() => setOpenSubmenu(isOpen ? null : link.name)}
                     className={`flex items-center justify-between w-[93%] px-4 py-2 mx-2 rounded mb-1 transition-all duration-200 cursor-pointer ${
                       isAnySubmenuActive ? "ring-1" : ""
-                    } ${!sidebarOpen ? "!justify-center !w-auto" : ""}`}
+                    } ${!sidebarOpen ? "justify-center! w-auto!" : ""}`}
                     style={{
                       color: isAnySubmenuActive ? colors.primary : colors.text,
                       backgroundColor: isAnySubmenuActive
@@ -442,7 +447,7 @@ const Dashboard = () => {
         </header>
 
         <div
-          className="h-full w-full p-4 md:p-6 overflow-auto scrollbar-hide"
+          className="h-full w-full p-2 md:p-0 overflow-auto scrollbar-hide"
           style={{ backgroundColor: colors.background }}
         >
           <div className="max-w-full h-full flex flex-col">

@@ -174,7 +174,7 @@ const Blog = () => {
   ];
 
   return (
-    <div className="p-6 min-h-screen">
+    <div className="p-4 md:p-6 min-h-screen">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <div>
@@ -394,7 +394,7 @@ const Blog = () => {
 
       {/* Pagination */}
       {!loading && data.length > 0 && (
-        <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-4 pb-10 md:pb-0">
           <span className="text-sm" style={{ color: colors.textSecondary }}>
             Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
             {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}

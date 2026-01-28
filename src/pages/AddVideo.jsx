@@ -96,15 +96,6 @@ const AddVideo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!thumbnail || !videoFile) {
-      Swal.fire(
-        "Error",
-        "Please upload both thumbnail and video file",
-        "error"
-      );
-      return;
-    }
-
     try {
       setLoading(true);
       const data = new FormData();
@@ -114,7 +105,9 @@ const AddVideo = () => {
       data.append("description", formData.description);
       data.append(
         "whatYouWillLearn",
-        JSON.stringify(formData.whatYouWillLearn.filter((p) => p.trim() !== ""))
+        JSON.stringify(
+          formData.whatYouWillLearn.filter((p) => p.trim() !== ""),
+        ),
       );
       data.append("thumbnail", thumbnail);
       data.append("video", videoFile);
@@ -185,7 +178,6 @@ const AddVideo = () => {
                     Video Title
                   </label>
                   <input
-                    required
                     name="title"
                     value={formData.title}
                     onChange={handleChange}
@@ -207,7 +199,6 @@ const AddVideo = () => {
                     Category
                   </label>
                   <input
-                    required
                     name="category"
                     value={formData.category}
                     onChange={handleChange}
@@ -233,7 +224,6 @@ const AddVideo = () => {
                   </label>
                   <div className="relative">
                     <input
-                      required
                       name="duration"
                       value={formData.duration}
                       onChange={handleChange}
@@ -261,7 +251,6 @@ const AddVideo = () => {
                   Description
                 </label>
                 <textarea
-                  required
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
@@ -299,7 +288,6 @@ const AddVideo = () => {
                     <div key={index} className="flex gap-3 group">
                       <div className="flex-1 relative">
                         <input
-                          required
                           value={point}
                           onChange={(e) =>
                             handleLearnPointChange(index, e.target.value)

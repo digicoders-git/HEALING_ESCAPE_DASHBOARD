@@ -38,11 +38,6 @@ const AddGallery = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!image) {
-      Swal.fire("Error", "Please upload an image", "error");
-      return;
-    }
-
     try {
       setLoading(true);
       const data = new FormData();
@@ -115,7 +110,6 @@ const AddGallery = () => {
                 Category
               </label>
               <input
-                required
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
@@ -137,7 +131,6 @@ const AddGallery = () => {
                 Caption
               </label>
               <textarea
-                required
                 name="caption"
                 value={formData.caption}
                 onChange={handleChange}

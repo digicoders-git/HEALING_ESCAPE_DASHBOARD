@@ -79,11 +79,6 @@ const AddBlog = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!image) {
-      Swal.fire("Error", "Please upload a blog image", "error");
-      return;
-    }
-
     try {
       setLoading(true);
       const data = new FormData();
@@ -164,7 +159,6 @@ const AddBlog = () => {
                   Title
                 </label>
                 <input
-                  required
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
@@ -185,7 +179,6 @@ const AddBlog = () => {
                   Category
                 </label>
                 <input
-                  required
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
@@ -208,7 +201,6 @@ const AddBlog = () => {
                 Excerpt (Short Description)
               </label>
               <textarea
-                required
                 name="excerpt"
                 value={formData.excerpt}
                 onChange={handleChange}
@@ -231,7 +223,6 @@ const AddBlog = () => {
                 Introduction
               </label>
               <textarea
-                required
                 name="introduction"
                 value={formData.introduction}
                 onChange={handleChange}
@@ -254,7 +245,6 @@ const AddBlog = () => {
                 Content
               </label>
               <textarea
-                required
                 name="content"
                 value={formData.content}
                 onChange={handleChange}
@@ -277,7 +267,6 @@ const AddBlog = () => {
                 Why This Matters
               </label>
               <textarea
-                required
                 name="whyThisMatters"
                 value={formData.whyThisMatters}
                 onChange={handleChange}

@@ -112,7 +112,9 @@ const EditVideo = () => {
       data.append("description", formData.description);
       data.append(
         "whatYouWillLearn",
-        JSON.stringify(formData.whatYouWillLearn.filter((p) => p.trim() !== ""))
+        JSON.stringify(
+          formData.whatYouWillLearn.filter((p) => p.trim() !== ""),
+        ),
       );
       data.append("isActive", formData.isActive);
 
@@ -193,7 +195,6 @@ const EditVideo = () => {
                   Video Title
                 </label>
                 <input
-                  required
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
@@ -213,7 +214,6 @@ const EditVideo = () => {
                   Category
                 </label>
                 <input
-                  required
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
@@ -236,7 +236,6 @@ const EditVideo = () => {
                   Duration
                 </label>
                 <input
-                  required
                   name="duration"
                   value={formData.duration}
                   onChange={handleChange}
@@ -278,7 +277,6 @@ const EditVideo = () => {
                 Description
               </label>
               <textarea
-                required
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
@@ -311,7 +309,6 @@ const EditVideo = () => {
                 {formData.whatYouWillLearn.map((point, index) => (
                   <div key={index} className="flex gap-2">
                     <input
-                      required
                       value={point}
                       onChange={(e) =>
                         handleLearnPointChange(index, e.target.value)
