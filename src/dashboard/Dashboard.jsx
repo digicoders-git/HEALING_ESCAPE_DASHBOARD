@@ -142,7 +142,7 @@ const Dashboard = () => {
         }}
       >
         <div
-          className="flex items-center justify-center border-b h-15 px-4"
+          className="flex items-center justify-center border-b h-[61px] px-4"
           style={{ borderColor: colors.accent + "30" }}
         >
           {sidebarOpen ? (
