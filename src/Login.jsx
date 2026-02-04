@@ -16,7 +16,7 @@ const Login = () => {
     e.preventDefault()
     setLoading(true)
     
-    console.log('Form data:', formData)
+    // console.log('Form data:', formData)
     // console.log('Sending to API:', { adminId: formData.email, password: formData.password })
     
     try {

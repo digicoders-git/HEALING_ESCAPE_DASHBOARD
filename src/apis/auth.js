@@ -9,10 +9,10 @@ export const adminLogin = async ({ email, password }) => {
       password,
     });
     
-    console.log('Auth.js - API Response:', response);
+    // console.log('Auth.js - API Response:', response);
     return response.data;
   } catch (error) {
-    console.error('Auth.js - API Error:', error);
+    // console.error('Auth.js - API Error:', error);
     throw error;
   }
 };
