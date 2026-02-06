@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Loader from "../components/ui/Loader";
 import ModernSelect from "../components/ModernSelect";
+import { Editor } from "@tinymce/tinymce-react";
 
 const EditBlog = () => {
   const { colors } = useTheme();
@@ -276,19 +277,50 @@ const EditBlog = () => {
               >
                 Content
               </label>
-              <textarea
-                name="content"
-                value={formData.content}
-                onChange={handleChange}
-                placeholder="Full blog article content"
-                rows={8}
-                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
-                style={{
-                  backgroundColor: colors.background,
-                  borderColor: colors.accent + "40",
-                  color: colors.text,
-                }}
-              />
+              <div className="min-h-[400px]">
+                <Editor
+                  apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
+                  value={formData.content}
+                  onEditorChange={(content) =>
+                    setFormData((prev) => ({ ...prev, content }))
+                  }
+                  init={{
+                    height: 500,
+                    menubar: true,
+                    plugins: [
+                      "advlist",
+                      "autolink",
+                      "lists",
+                      "link",
+                      "image",
+                      "charmap",
+                      "preview",
+                      "anchor",
+                      "searchreplace",
+                      "visualblocks",
+                      "code",
+                      "fullscreen",
+                      "insertdatetime",
+                      "media",
+                      "table",
+                      "code",
+                      "help",
+                      "wordcount",
+                    ],
+                    toolbar:
+                      "undo redo | blocks | " +
+                      "bold italic forecolor | alignleft aligncenter " +
+                      "alignright alignjustify | bullist numlist outdent indent | " +
+                      "removeformat | help | image link | code",
+                    content_style:
+                      "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                    skin:
+                      colors.background === "#ffffff" ? "oxide" : "oxide-dark",
+                    content_css:
+                      colors.background === "#ffffff" ? "default" : "dark",
+                  }}
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
