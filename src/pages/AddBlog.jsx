@@ -41,6 +41,9 @@ const AddBlog = () => {
       "fullsize",
     ],
     placeholder: "Start typing your blog content...",
+    askBeforePasteFromWord: false,
+    askBeforePasteHTML: false,
+    defaultActionOnPaste: "insert_clear_html",
     style: {
       background: colors.background,
       color: colors.text,
