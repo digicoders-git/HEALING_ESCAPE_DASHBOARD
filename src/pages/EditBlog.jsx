@@ -6,12 +6,77 @@ import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Loader from "../components/ui/Loader";
 import ModernSelect from "../components/ModernSelect";
-import { Editor } from "@tinymce/tinymce-react";
+import JoditEditor from "jodit-react";
+import { useRef } from "react";
 
 const EditBlog = () => {
+  const editor = useRef(null);
   const { colors } = useTheme();
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const config = {
+    readonly: false,
+    height: 500,
+    theme: colors.background === "#ffffff" ? "default" : "dark",
+    buttons: [
+      "bold",
+      "italic",
+      "underline",
+      "|",
+      "ul",
+      "ol",
+      "|",
+      "font",
+      "fontsize",
+      "|",
+      "align",
+      "link",
+      "|",
+      "undo",
+      "redo",
+      "|",
+      "source",
+      "fullsize",
+    ],
+    placeholder: "Start typing your blog content...",
+    style: {
+      background: colors.background,
+      color: colors.text,
+      fontFamily: "inherit",
+    },
+  };
+
+  const customJoditStyles = `
+    .jodit-container {
+      border-color: ${colors.accent}40 !important;
+      background-color: ${colors.background} !important;
+      color: ${colors.text} !important;
+    }
+    .jodit-toolbar__box {
+      background-color: ${colors.sidebar} !important;
+      border-bottom: 1px solid ${colors.accent}30 !important;
+    }
+    .jodit-toolbar-button__button {
+       color: ${colors.text} !important;
+    }
+    .jodit-toolbar-button__button:hover {
+       background-color: ${colors.primary}20 !important;
+    }
+    .jodit-status-bar {
+      background-color: ${colors.sidebar} !important;
+      color: ${colors.textSecondary} !important;
+      border-top: 1px solid ${colors.accent}30 !important;
+    }
+    .jodit-workplace {
+      background-color: ${colors.background} !important;
+      color: ${colors.text} !important;
+    }
+    .jodit-wysiwyg {
+      color: ${colors.text} !important;
+    }
+  `;
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [blogs, setBlogs] = useState([]);
@@ -152,6 +217,7 @@ const EditBlog = () => {
 
   return (
     <div className="p-6 min-h-screen">
+      <style>{customJoditStyles}</style>
       <div className="flex items-center gap-4 mb-6">
         <button
           onClick={() => navigate(-1)}
@@ -278,47 +344,14 @@ const EditBlog = () => {
                 Content
               </label>
               <div className="min-h-[400px]">
-                <Editor
-                  apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
+                <JoditEditor
+                  ref={editor}
                   value={formData.content}
-                  onEditorChange={(content) =>
-                    setFormData((prev) => ({ ...prev, content }))
+                  config={config}
+                  onBlur={(newContent) =>
+                    setFormData((prev) => ({ ...prev, content: newContent }))
                   }
-                  init={{
-                    height: 500,
-                    menubar: true,
-                    plugins: [
-                      "advlist",
-                      "autolink",
-                      "lists",
-                      "link",
-                      "image",
-                      "charmap",
-                      "preview",
-                      "anchor",
-                      "searchreplace",
-                      "visualblocks",
-                      "code",
-                      "fullscreen",
-                      "insertdatetime",
-                      "media",
-                      "table",
-                      "code",
-                      "help",
-                      "wordcount",
-                    ],
-                    toolbar:
-                      "undo redo | blocks | " +
-                      "bold italic forecolor | alignleft aligncenter " +
-                      "alignright alignjustify | bullist numlist outdent indent | " +
-                      "removeformat | help | image link | code",
-                    content_style:
-                      "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-                    skin:
-                      colors.background === "#ffffff" ? "oxide" : "oxide-dark",
-                    content_css:
-                      colors.background === "#ffffff" ? "default" : "dark",
-                  }}
+                  onChange={(newContent) => {}}
                 />
               </div>
             </div>
