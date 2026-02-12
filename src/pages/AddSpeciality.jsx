@@ -65,18 +65,18 @@ const AddSpeciality = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="min-h-screen p-6" style={{ backgroundColor: colors.background }}>
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
         <button
           onClick={() => navigate("/dashboard/speciality")}
-          className="p-2 rounded transition-colors hover:bg-black/5 cursor-pointer"
-          style={{ color: colors.text }}
+          className="p-3 rounded-xl transition-all hover:scale-110 cursor-pointer shadow-md"
+          style={{ backgroundColor: colors.accent + "20", color: colors.text }}
         >
           <MdArrowBack size={24} />
         </button>
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
+          <h1 className="text-3xl font-black" style={{ color: '#000000' }}>
             Add Speciality
           </h1>
           <p className="text-sm" style={{ color: colors.textSecondary }}>
@@ -86,39 +86,40 @@ const AddSpeciality = () => {
       </div>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="max-w-full">
+      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
         <div
-          className="rounded-lg border p-6 shadow-sm"
+          className="rounded-2xl border-2 p-8 shadow-xl"
           style={{
             backgroundColor: colors.background,
-            borderColor: colors.accent + "30",
+            borderColor: '#006cb520',
           }}
         >
           {/* Image Upload */}
-          <div className="mb-6">
+          <div className="mb-8">
             <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: colors.textSecondary }}
+              className="block text-sm font-bold mb-3 uppercase tracking-wider"
+              style={{ color: '#006cb5' }}
             >
               Speciality Image *
             </label>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
               {imagePreview && (
                 <img
                   src={imagePreview}
                   alt="Preview"
-                  className="w-24 h-24 rounded object-cover border"
-                  style={{ borderColor: colors.accent + "30" }}
+                  className="w-32 h-32 rounded-xl object-cover border-2 shadow-lg"
+                  style={{ borderColor: '#006cb5' }}
                 />
               )}
               <label
-                className="flex items-center gap-2 px-4 py-2 rounded border cursor-pointer hover:bg-black/5 transition-colors"
+                className="flex items-center gap-3 px-6 py-3 rounded-xl border-2 cursor-pointer transition-all hover:scale-105 shadow-md font-bold"
                 style={{
-                  borderColor: colors.accent + "30",
-                  color: colors.text,
+                  borderColor: '#006cb5',
+                  backgroundColor: '#006cb510',
+                  color: '#006cb5',
                 }}
               >
-                <MdImage size={20} />
+                <MdImage size={24} />
                 Upload Image
                 <input
                   type="file"
@@ -134,8 +135,8 @@ const AddSpeciality = () => {
             {/* Title */}
             <div>
               <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.textSecondary }}
+                className="block text-sm font-bold mb-3 uppercase tracking-wider"
+                style={{ color: '#006cb5' }}
               >
                 Title *
               </label>
@@ -146,11 +147,19 @@ const AddSpeciality = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, title: e.target.value })
                 }
-                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-2"
+                className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium shadow-sm"
                 style={{
-                  backgroundColor: colors.background,
-                  borderColor: colors.accent + "40",
-                  color: colors.text,
+                  backgroundColor: '#ffffff',
+                  borderColor: '#e5e7eb',
+                  color: '#000000',
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#006cb5';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#e5e7eb';
+                  e.target.style.boxShadow = 'none';
                 }}
                 placeholder="e.g., Cardiology"
               />
@@ -159,8 +168,8 @@ const AddSpeciality = () => {
             {/* Description */}
             <div>
               <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.textSecondary }}
+                className="block text-sm font-bold mb-3 uppercase tracking-wider"
+                style={{ color: '#006cb5' }}
               >
                 Description *
               </label>
@@ -171,11 +180,19 @@ const AddSpeciality = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
-                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-2"
+                className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium shadow-sm"
                 style={{
-                  backgroundColor: colors.background,
-                  borderColor: colors.accent + "40",
-                  color: colors.text,
+                  backgroundColor: '#ffffff',
+                  borderColor: '#e5e7eb',
+                  color: '#000000',
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#006cb5';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#e5e7eb';
+                  e.target.style.boxShadow = 'none';
                 }}
                 placeholder="Brief description of the speciality"
               />
@@ -187,10 +204,10 @@ const AddSpeciality = () => {
             <button
               type="button"
               onClick={() => navigate("/dashboard/speciality")}
-              className="px-6 py-2.5 rounded font-medium transition-colors cursor-pointer"
+              className="px-8 py-3 rounded-xl font-bold transition-all hover:scale-105 cursor-pointer shadow-md"
               style={{
-                backgroundColor: colors.accent + "20",
-                color: colors.text,
+                backgroundColor: '#e5e7eb',
+                color: '#000000',
               }}
             >
               Cancel
@@ -198,10 +215,10 @@ const AddSpeciality = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="flex items-center gap-2 px-6 py-2.5 rounded font-medium shadow transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="flex items-center gap-2 px-8 py-3 rounded-xl font-bold shadow-lg transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               style={{
-                backgroundColor: colors.primary,
-                color: colors.background,
+                backgroundColor: '#1db64c',
+                color: '#ffffff',
               }}
             >
               {submitting ? (
@@ -211,7 +228,7 @@ const AddSpeciality = () => {
                 </>
               ) : (
                 <>
-                  <MdSave size={20} />
+                  <MdSave size={22} />
                   Save Speciality
                 </>
               )}

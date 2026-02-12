@@ -302,47 +302,54 @@ const Home = () => {
         {statCards.map((card, index) => (
           <div
             key={index}
-            className="p-6 rounded border shadow-sm transition-all hover:shadow-md group cursor-pointer"
+            className="relative p-6 rounded-2xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 group cursor-pointer overflow-hidden"
             style={{
-              backgroundColor: colors.sidebar || colors.background,
-              borderColor: colors.accent + "30",
+              background: `linear-gradient(135deg, ${card.color}15 0%, ${card.color}05 100%)`,
+              border: `1.5px solid ${card.color}30`,
+              backdropFilter: 'blur(10px)',
             }}
           >
-            <div className="flex flex-col items-center text-center space-y-3">
+            <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10 -mr-16 -mt-16 transition-all duration-500 group-hover:scale-150" 
+              style={{ backgroundColor: card.color }}
+            />
+            <div className="relative flex flex-col items-start space-y-4">
               <div
-                className="p-3 rounded transition-transform group-hover:scale-110"
+                className="p-4 rounded-xl shadow-md transition-all duration-500 group-hover:scale-110 group-hover:rotate-6"
                 style={{
-                  backgroundColor: card.color + "15",
-                  color: card.color,
+                  background: `linear-gradient(135deg, ${card.color} 0%, ${card.color}dd 100%)`,
+                  color: '#FFFFFF',
                 }}
               >
-                <card.icon size={28} />
+                <card.icon size={32} />
               </div>
-              <div>
+              <div className="w-full">
                 <p
-                  className="text-xs font-bold uppercase tracking-wider"
-                  style={{ color: colors.textSecondary }}
+                  className="text-xs font-semibold uppercase tracking-wider mb-2"
+                  style={{ color: card.color }}
                 >
                   {card.title}
                 </p>
                 <h3
-                  className="text-2xl font-black mt-1"
-                  style={{ color: colors.text }}
+                  className="text-4xl font-black transition-all duration-300 group-hover:scale-105"
+                  style={{ color: card.color }}
                 >
                   {card.count}
                 </h3>
               </div>
             </div>
+            <div className="absolute bottom-0 left-0 w-full h-1 transition-all duration-500 group-hover:h-2" 
+              style={{ background: `linear-gradient(90deg, ${card.color} 0%, ${card.color}80 100%)` }}
+            />
           </div>
         ))}
       </div>
 
       {/* Chart Section */}
       <div
-        className="p-8 rounded border shadow-xl transition-all"
+        className="p-8 rounded-2xl border shadow-xl transition-all hover:shadow-2xl backdrop-blur-sm"
         style={{
-          backgroundColor: colors.sidebar || colors.background,
-          borderColor: colors.accent + "30",
+          backgroundColor: '#FFFFFF',
+          borderColor: colors.accent,
         }}
       >
         <HighchartsReact highcharts={Highcharts} options={chartOptions} />
@@ -350,10 +357,10 @@ const Home = () => {
 
       {/* Line Chart Section */}
       <div
-        className="p-8 rounded border shadow-xl transition-all"
+        className="p-8 rounded-2xl border shadow-xl transition-all hover:shadow-2xl backdrop-blur-sm"
         style={{
-          backgroundColor: colors.sidebar || colors.background,
-          borderColor: colors.accent + "30",
+          backgroundColor: '#FFFFFF',
+          borderColor: colors.accent,
         }}
       >
         <HighchartsReact highcharts={Highcharts} options={lineChartOptions} />

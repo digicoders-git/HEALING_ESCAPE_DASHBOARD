@@ -184,19 +184,19 @@ const Employees = () => {
         <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
+              <h1 className="text-3xl font-black" style={{ color: '#000000' }}>
                 Employees
               </h1>
               {loading ? (
-                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-200 animate-pulse">
-                  <div className="w-4 h-4 rounded-full border-2 border-gray-400 border-t-transparent animate-spin"></div>
+                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-blue-50 animate-pulse">
+                  <div className="w-5 h-5 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#006cb5' }}></div>
                 </div>
               ) : (
                 <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-sm"
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-black shadow-lg"
                   style={{
-                    backgroundColor: colors.primary,
-                    color: colors.background,
+                    backgroundColor: '#006cb5',
+                    color: '#ffffff',
                   }}
                   title="Total Employees"
                 >
@@ -210,20 +210,24 @@ const Employees = () => {
           </div>
           <button
             onClick={() => navigate("/dashboard/employee/add")}
-            className="flex items-center gap-2 px-4 py-2 rounded shadow transition-all hover:scale-105 active:scale-95 cursor-pointer"
-            style={{ backgroundColor: colors.text, color: colors.background }}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer font-bold"
+            style={{
+              backgroundColor: '#1db64c',
+              color: '#ffffff',
+            }}
           >
-            <MdAdd size={20} /> Add Employee
+            <MdAdd size={22} /> Add Employee
           </button>
         </div>
 
         {/* Filters */}
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex gap-4">
           {/* Search Input */}
-          <div className="relative flex-1">
+          <div className="relative w-full">
             <MdSearch
-              className="absolute left-3 top-3 z-10"
-              style={{ color: colors.textSecondary }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10"
+              style={{ color: '#006cb5' }}
+              size={22}
             />
             <input
               type="text"
@@ -232,17 +236,25 @@ const Employees = () => {
               onChange={(e) =>
                 setFilters({ ...filters, search: e.target.value })
               }
-              className="w-full pl-10 pr-4 py-[6px] rounded border outline-none focus:ring-1"
+              className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium shadow-sm"
               style={{
-                backgroundColor: colors.background,
-                borderColor: colors.accent + "40",
-                color: colors.text,
+                backgroundColor: '#ffffff',
+                borderColor: '#e5e7eb',
+                color: '#000000',
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = '#006cb5';
+                e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = '#e5e7eb';
+                e.target.style.boxShadow = 'none';
               }}
             />
           </div>
 
           {/* Status Filter */}
-          <div className="w-full md:w-auto md:min-w-[180px]">
+          <div className="w-fit">
             <ModernSelect
               options={statusOptions}
               value={filters.isActive}
@@ -262,105 +274,88 @@ const Employees = () => {
           <table className="w-full text-left border-collapse">
             <thead
               className="sticky top-0 z-20"
-              style={{ backgroundColor: colors.background }}
+              style={{ 
+                backgroundColor: '#006cb5',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+              }}
             >
               <tr>
                 <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
+                  className="p-4 font-bold text-sm sticky top-0 z-10 text-white"
                   style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
+                    backgroundColor: '#006cb5',
                   }}
                 >
                   #
                 </th>
                 <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
+                  className="p-4 font-bold text-sm sticky top-0 z-10 text-white"
                   style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
+                    backgroundColor: '#006cb5',
                   }}
                 >
                   Profile
                 </th>
                 <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
+                  className="p-4 font-bold text-sm sticky top-0 z-10 text-white"
                   style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
+                    backgroundColor: '#006cb5',
                   }}
                 >
                   Name
                 </th>
                 <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
+                  className="p-4 font-bold text-sm sticky top-0 z-10 text-white"
                   style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
+                    backgroundColor: '#006cb5',
                   }}
                 >
                   Contact
                 </th>
                 <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
+                  className="p-4 font-bold text-sm sticky top-0 z-10 text-white"
                   style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
+                    backgroundColor: '#006cb5',
                   }}
                 >
                   Role
                 </th>
                 <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
+                  className="p-4 font-bold text-sm sticky top-0 z-10 text-white"
                   style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
+                    backgroundColor: '#006cb5',
                   }}
                 >
                   Last Login
                 </th>
                 <th
-                  className="p-4 font-bold text-sm text-center sticky top-0 z-10 border-b"
+                  className="p-4 font-bold text-sm text-center sticky top-0 z-10 text-white"
                   style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
+                    backgroundColor: '#006cb5',
                   }}
                 >
                   Leads Assigned
                 </th>
                 <th
-                  className="p-4 font-bold text-sm text-center sticky top-0 z-10 border-b"
+                  className="p-4 font-bold text-sm text-center sticky top-0 z-10 text-white"
                   style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
+                    backgroundColor: '#006cb5',
                   }}
                 >
                   Leads Closed
                 </th>
                 <th
-                  className="p-4 font-bold text-sm sticky top-0 z-10 border-b"
+                  className="p-4 font-bold text-sm sticky top-0 z-10 text-white"
                   style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
+                    backgroundColor: '#006cb5',
                   }}
                 >
                   Status
                 </th>
                 <th
-                  className="p-4 font-bold text-sm text-right sticky top-0 z-10 border-b"
+                  className="p-4 font-bold text-sm text-right sticky top-0 z-10 text-white"
                   style={{
-                    color: colors.text,
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary + "30",
+                    backgroundColor: '#006cb5',
                   }}
                 >
                   Actions
@@ -423,12 +418,14 @@ const Employees = () => {
                       />
                     </td>
                     <td
-                      className="p-4 font-medium"
-                      style={{ color: colors.text }}
+                      className="p-4 font-bold text-base"
+                      style={{ color: '#006cb5' }}
                     >
                       <div>
-                        <div className="font-bold">{item.name}</div>
-                        <div className="text-xs opacity-70">{item.email}</div>
+                        <div className="font-bold text-base">{item.name}</div>
+                        <div className="text-xs font-normal" style={{ color: colors.textSecondary }}>
+                          {item.email}
+                        </div>
                       </div>
                     </td>
                     <td
@@ -441,8 +438,8 @@ const Employees = () => {
                       className="p-4 text-sm"
                       style={{ color: colors.textSecondary }}
                     >
-                      <div className="font-semibold">{item.designation}</div>
-                      <div className="text-xs italic">{item.department}</div>
+                      <div>{item.designation}</div>
+                      <div className="text-xs">{item.department}</div>
                     </td>
                     <td
                       className="p-4 text-xs"
@@ -484,19 +481,37 @@ const Employees = () => {
                           onClick={() =>
                             navigate(`/dashboard/employee/view/${item._id}`)
                           }
-                          className="p-2 rounded hover:bg-green-100 text-green-600 transition-colors cursor-pointer"
+                          className="p-2.5 rounded-xl transition-all hover:scale-110 cursor-pointer shadow-sm"
+                          style={{ backgroundColor: '#1db64c20', color: '#1db64c' }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#1db64c';
+                            e.currentTarget.style.color = '#ffffff';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#1db64c20';
+                            e.currentTarget.style.color = '#1db64c';
+                          }}
                           title="View"
                         >
-                          <MdVisibility size={18} />
+                          <MdVisibility size={20} />
                         </button>
                         <button
                           onClick={() =>
                             navigate(`/dashboard/employee/edit/${item._id}`)
                           }
-                          className="p-2 rounded hover:bg-blue-100 text-blue-600 transition-colors cursor-pointer"
+                          className="p-2.5 rounded-xl transition-all hover:scale-110 cursor-pointer shadow-sm"
+                          style={{ backgroundColor: '#006cb520', color: '#006cb5' }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#006cb5';
+                            e.currentTarget.style.color = '#ffffff';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#006cb520';
+                            e.currentTarget.style.color = '#006cb5';
+                          }}
                           title="Edit"
                         >
-                          <MdEdit size={18} />
+                          <MdEdit size={20} />
                         </button>
                         <button
                           onClick={() => handleDelete(item._id)}

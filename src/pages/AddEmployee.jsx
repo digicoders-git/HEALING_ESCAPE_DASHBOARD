@@ -81,41 +81,51 @@ const AddEmployee = () => {
   };
 
   return (
-    <div className="p-6">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-6">
-        <button
-          onClick={() => navigate("/dashboard/employee")}
-          className="p-2 rounded transition-colors hover:bg-black/5 cursor-pointer"
-          style={{ color: colors.text }}
-        >
-          <MdArrowBack size={24} />
-        </button>
-        <div>
-          <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
-            Add Employee
-          </h1>
-          <p className="text-sm" style={{ color: colors.textSecondary }}>
-            Create a new CRM employee account
-          </p>
+    <div className="min-h-screen" style={{ backgroundColor: '#f9fafb' }}>
+      {/* Premium Gradient Header */}
+      <div 
+        className="sticky top-0 z-50 shadow-lg"
+        style={{
+          background: 'linear-gradient(135deg, #006cb5 0%, #004d84 100%)'
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate("/dashboard/employee")}
+              className="p-2.5 rounded-xl transition-all hover:scale-110 cursor-pointer"
+              style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#ffffff' }}
+            >
+              <MdArrowBack size={24} />
+            </button>
+            <div>
+              <h1 className="text-3xl font-black text-white flex items-center gap-3">
+                <MdPerson size={32} /> Add New Employee
+              </h1>
+              <p className="text-sm mt-1 font-medium" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
+                Create a new CRM employee account with credentials
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
-        <div
-          className="rounded-lg border p-6 shadow-sm"
-          style={{
-            backgroundColor: colors.background,
-            borderColor: colors.accent + "30",
-          }}
-        >
+      {/* Main Content */}
+      <div className="max-w-5xl mx-auto px-6 py-8">
+        <form onSubmit={handleSubmit}>
+          <div
+            className="rounded-2xl shadow-xl p-8 border"
+            style={{
+              backgroundColor: '#ffffff',
+              borderColor: '#e5e7eb',
+            }}
+          >
           {/* Profile Photo Upload */}
-          <div className="mb-8 flex flex-col items-center">
+          <div className="mb-10 flex flex-col items-center">
             <div className="relative group">
               <div
-                className="w-32 h-32 rounded-full border-2 overflow-hidden flex items-center justify-center bg-gray-100"
-                style={{ borderColor: colors.accent + "30" }}
+                className="w-40 h-40 rounded-full border-4 overflow-hidden flex items-center justify-center shadow-xl"
+                style={{ borderColor: '#006cb5', backgroundColor: '#f0f9ff' }}
               >
                 {imagePreview ? (
                   <img
@@ -124,17 +134,17 @@ const AddEmployee = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <MdPerson size={64} className="text-gray-300" />
+                  <MdPerson size={80} style={{ color: '#006cb5' }} />
                 )}
               </div>
               <label
-                className="absolute bottom-0 right-0 p-2 rounded-full cursor-pointer shadow-lg hover:scale-110 transition-transform"
+                className="absolute bottom-2 right-2 p-3 rounded-full cursor-pointer shadow-xl hover:scale-110 transition-all"
                 style={{
-                  backgroundColor: colors.primary,
-                  color: colors.background,
+                  backgroundColor: '#1db64c',
+                  color: '#ffffff',
                 }}
               >
-                <MdImage size={20} />
+                <MdImage size={24} />
                 <input
                   type="file"
                   accept="image/*"
@@ -143,24 +153,31 @@ const AddEmployee = () => {
                 />
               </label>
             </div>
-            <p className="mt-2 text-sm" style={{ color: colors.textSecondary }}>
-              Profile Photo
+            <p className="mt-4 text-sm font-semibold" style={{ color: '#6b7280' }}>
+              Upload Profile Photo
             </p>
+          </div>
+
+          {/* Section Header */}
+          <div className="flex items-center gap-3 pb-6 mb-6 border-b-2" style={{ borderColor: '#f1f5f9' }}>
+            <div className="w-1 h-8 rounded-full" style={{ backgroundColor: '#006cb5' }}></div>
+            <h2 className="text-xl font-black" style={{ color: '#1f2937' }}>Employee Information</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Name */}
             <div>
               <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.textSecondary }}
+                className="block text-sm font-bold mb-2.5"
+                style={{ color: '#1f2937' }}
               >
                 Full Name *
               </label>
               <div className="relative">
                 <MdPerson
-                  className="absolute left-3 top-3.5"
-                  style={{ color: colors.textSecondary }}
+                  className="absolute left-4 top-4"
+                  style={{ color: '#6b7280' }}
+                  size={20}
                 />
                 <input
                   type="text"
@@ -168,11 +185,19 @@ const AddEmployee = () => {
                   required
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-2.5 rounded border outline-none focus:ring-2"
+                  className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium"
                   style={{
-                    backgroundColor: colors.background,
-                    borderColor: colors.accent + "40",
-                    color: colors.text,
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    color: '#1f2937',
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#006cb5';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#e5e7eb';
+                    e.target.style.boxShadow = 'none';
                   }}
                   placeholder="e.g. Abhay Kumar"
                 />
@@ -182,26 +207,35 @@ const AddEmployee = () => {
             {/* Email */}
             <div>
               <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.textSecondary }}
+                className="block text-sm font-bold mb-2.5"
+                style={{ color: '#1f2937' }}
               >
                 Email Address
               </label>
               <div className="relative">
                 <MdEmail
-                  className="absolute left-3 top-3.5"
-                  style={{ color: colors.textSecondary }}
+                  className="absolute left-4 top-4"
+                  style={{ color: '#6b7280' }}
+                  size={20}
                 />
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-2.5 rounded border outline-none focus:ring-2"
+                  className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium"
                   style={{
-                    backgroundColor: colors.background,
-                    borderColor: colors.accent + "40",
-                    color: colors.text,
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    color: '#1f2937',
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#006cb5';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#e5e7eb';
+                    e.target.style.boxShadow = 'none';
                   }}
                   placeholder="e.g. abhay@example.com"
                 />
@@ -211,15 +245,16 @@ const AddEmployee = () => {
             {/* Phone */}
             <div>
               <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.textSecondary }}
+                className="block text-sm font-bold mb-2.5"
+                style={{ color: '#1f2937' }}
               >
                 Phone Number *
               </label>
               <div className="relative">
                 <MdPhone
-                  className="absolute left-3 top-3.5"
-                  style={{ color: colors.textSecondary }}
+                  className="absolute left-4 top-4"
+                  style={{ color: '#6b7280' }}
+                  size={20}
                 />
                 <input
                   type="tel"
@@ -227,11 +262,19 @@ const AddEmployee = () => {
                   required
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-2.5 rounded border outline-none focus:ring-2"
+                  className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium"
                   style={{
-                    backgroundColor: colors.background,
-                    borderColor: colors.accent + "40",
-                    color: colors.text,
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    color: '#1f2937',
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#006cb5';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#e5e7eb';
+                    e.target.style.boxShadow = 'none';
                   }}
                   placeholder="e.g. 7234567890"
                 />
@@ -241,26 +284,35 @@ const AddEmployee = () => {
             {/* Password */}
             <div>
               <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.textSecondary }}
+                className="block text-sm font-bold mb-2.5"
+                style={{ color: '#1f2937' }}
               >
                 Password
               </label>
               <div className="relative">
                 <MdLock
-                  className="absolute left-3 top-3.5"
-                  style={{ color: colors.textSecondary }}
+                  className="absolute left-4 top-4"
+                  style={{ color: '#6b7280' }}
+                  size={20}
                 />
                 <input
                   type="password"
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-2.5 rounded border outline-none focus:ring-2"
+                  className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium"
                   style={{
-                    backgroundColor: colors.background,
-                    borderColor: colors.accent + "40",
-                    color: colors.text,
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    color: '#1f2937',
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#006cb5';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#e5e7eb';
+                    e.target.style.boxShadow = 'none';
                   }}
                   placeholder="Set account password"
                 />
@@ -270,26 +322,35 @@ const AddEmployee = () => {
             {/* Department */}
             <div>
               <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.textSecondary }}
+                className="block text-sm font-bold mb-2.5"
+                style={{ color: '#1f2937' }}
               >
                 Department
               </label>
               <div className="relative">
                 <MdWork
-                  className="absolute left-3 top-3.5"
-                  style={{ color: colors.textSecondary }}
+                  className="absolute left-4 top-4"
+                  style={{ color: '#6b7280' }}
+                  size={20}
                 />
                 <input
                   type="text"
                   name="department"
                   value={formData.department}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-2.5 rounded border outline-none focus:ring-2"
+                  className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium"
                   style={{
-                    backgroundColor: colors.background,
-                    borderColor: colors.accent + "40",
-                    color: colors.text,
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    color: '#1f2937',
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#006cb5';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#e5e7eb';
+                    e.target.style.boxShadow = 'none';
                   }}
                   placeholder="e.g. Sales"
                 />
@@ -299,26 +360,35 @@ const AddEmployee = () => {
             {/* Designation */}
             <div>
               <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.textSecondary }}
+                className="block text-sm font-bold mb-2.5"
+                style={{ color: '#1f2937' }}
               >
                 Designation
               </label>
               <div className="relative">
                 <MdBadge
-                  className="absolute left-3 top-3.5"
-                  style={{ color: colors.textSecondary }}
+                  className="absolute left-4 top-4"
+                  style={{ color: '#6b7280' }}
+                  size={20}
                 />
                 <input
                   type="text"
                   name="designation"
                   value={formData.designation}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-2.5 rounded border outline-none focus:ring-2"
+                  className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium"
                   style={{
-                    backgroundColor: colors.background,
-                    borderColor: colors.accent + "40",
-                    color: colors.text,
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    color: '#1f2937',
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#006cb5';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#e5e7eb';
+                    e.target.style.boxShadow = 'none';
                   }}
                   placeholder="e.g. Senior Counsellor"
                 />
@@ -326,15 +396,15 @@ const AddEmployee = () => {
             </div>
           </div>
 
-          {/* Submit Button */}
-          <div className="flex justify-end gap-4 mt-8">
+          {/* Action Buttons */}
+          <div className="flex justify-end gap-4 mt-10 pt-8 border-t-2" style={{ borderColor: '#e5e7eb' }}>
             <button
               type="button"
               onClick={() => navigate("/dashboard/employee")}
-              className="px-6 py-2.5 rounded font-medium transition-colors cursor-pointer"
+              className="px-8 py-3.5 rounded-xl font-bold cursor-pointer transition-all hover:scale-105 shadow-md"
               style={{
-                backgroundColor: colors.accent + "20",
-                color: colors.text,
+                backgroundColor: '#f3f4f6',
+                color: '#374151',
               }}
             >
               Cancel
@@ -342,27 +412,28 @@ const AddEmployee = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="flex items-center gap-2 px-6 py-2.5 rounded font-medium shadow transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold shadow-lg transition-all hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               style={{
-                backgroundColor: colors.primary,
-                color: colors.background,
+                backgroundColor: '#1db64c',
+                color: '#ffffff',
               }}
             >
               {submitting ? (
                 <>
-                  <Loader size={20} />
-                  Creating...
+                  <Loader size={22} color="#ffffff" />
+                  Creating Employee...
                 </>
               ) : (
                 <>
-                  <MdSave size={20} />
+                  <MdSave size={22} />
                   Create Employee
                 </>
               )}
             </button>
           </div>
-        </div>
-      </form>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

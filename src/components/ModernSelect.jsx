@@ -58,32 +58,42 @@ const ModernSelect = ({
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
       <div
-        className={`w-full px-4 py-2 rounded-md border outline-none cursor-pointer text-sm flex items-center justify-between transition-all ${
+        className={`w-full px-4 py-3.5 rounded-xl border-2 outline-none cursor-pointer text-sm font-medium flex items-center justify-between transition-all shadow-sm ${
           disabled ? "opacity-50 cursor-not-allowed" : ""
         }`}
         style={{
-          backgroundColor: colors.background,
-          borderColor: isOpen ? colors.primary : colors.accent + "30",
-          color: value ? colors.text : colors.textSecondary,
+          backgroundColor: '#ffffff',
+          borderColor: isOpen ? '#006cb5' : '#e5e7eb',
+          color: value ? '#000000' : '#64748b',
         }}
         onClick={() => !disabled && setIsOpen(!isOpen)}
+        onMouseEnter={(e) => {
+          if (!isOpen && !disabled) {
+            e.currentTarget.style.borderColor = '#006cb5';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isOpen && !disabled) {
+            e.currentTarget.style.borderColor = '#e5e7eb';
+          }
+        }}
       >
         <span className="truncate">{displayText}</span>
         <ChevronDown
-          size={16}
+          size={18}
           className={`transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
           }`}
-          style={{ color: colors.textSecondary }}
+          style={{ color: '#006cb5' }}
         />
       </div>
 
       {isOpen && (
         <div
-          className="absolute z-50 w-full mt-1 rounded-md border shadow-lg max-h-60 overflow-hidden"
+          className="absolute z-50 w-full mt-2 rounded-xl border-2 shadow-xl max-h-60 overflow-hidden"
           style={{
-            backgroundColor: colors.background,
-            borderColor: colors.accent + "30",
+            backgroundColor: '#ffffff',
+            borderColor: '#006cb5',
           }}
         >
           {options.length > 5 && (
@@ -128,28 +138,28 @@ const ModernSelect = ({
                 return (
                   <div
                     key={index}
-                    className="px-4 py-2 cursor-pointer text-sm flex items-center justify-between transition-colors"
+                    className="px-4 py-2.5 cursor-pointer text-sm font-medium flex items-center justify-between transition-all rounded-lg mx-2 my-1"
                     style={{
                       backgroundColor: isSelected
-                        ? colors.primary + "10"
+                        ? '#006cb510'
                         : "transparent",
-                      color: isSelected ? colors.primary : colors.text,
+                      color: isSelected ? '#006cb5' : '#000000',
                     }}
                     onMouseEnter={(e) => {
                       if (!isSelected) {
-                        e.target.style.backgroundColor = colors.accent + "10";
+                        e.currentTarget.style.backgroundColor = '#f1f5f9';
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!isSelected) {
-                        e.target.style.backgroundColor = "transparent";
+                        e.currentTarget.style.backgroundColor = "transparent";
                       }
                     }}
                     onClick={() => handleSelect(option)}
                   >
                     <span className="truncate">{optionLabel}</span>
                     {isSelected && (
-                      <Check size={16} style={{ color: colors.primary }} />
+                      <Check size={18} style={{ color: '#006cb5' }} />
                     )}
                   </div>
                 );

@@ -114,12 +114,30 @@ const Enquiry = () => {
   return (
     <div className="min-h-screen md:h-screen flex flex-col md:overflow-hidden">
       {/* Header */}
-      <div className="shrink-0 p-4 md:p-6 pb-4">
+      <div className="shrink-0 p-4 md:p-6 pb-4" style={{ backgroundColor: colors.background }}>
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
-              Enquiries
-            </h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl font-black" style={{ color: '#000000' }}>
+                Enquiries
+              </h1>
+              {loading ? (
+                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-blue-50 animate-pulse">
+                  <div className="w-5 h-5 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#006cb5' }}></div>
+                </div>
+              ) : (
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-black shadow-lg"
+                  style={{
+                    backgroundColor: '#006cb5',
+                    color: '#ffffff',
+                  }}
+                  title="Total Enquiries"
+                >
+                  {pagination.total}
+                </div>
+              )}
+            </div>
             <p className="text-sm" style={{ color: colors.textSecondary }}>
               Manage all general enquiries
             </p>
@@ -129,24 +147,33 @@ const Enquiry = () => {
 
       {/* Filters */}
       <div className="shrink-0 px-4 md:px-6 pb-4">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="relative flex-1">
+        <div className="flex gap-4">
+          <div className="relative w-full">
             <MdSearch
-              className="absolute left-3 top-3 z-10"
-              style={{ color: colors.textSecondary }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10"
+              style={{ color: '#006cb5' }}
+              size={22}
             />
             <input
               type="text"
-              placeholder="Search by full name, email, phone, country, city, message..."
+              placeholder="Search by name, email, phone, country, city, message..."
               value={filters.search}
               onChange={(e) =>
                 setFilters({ ...filters, search: e.target.value })
               }
-              className="w-full pl-10 pr-4 py-[6px] rounded border outline-none focus:ring-1 transition-all"
+              className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium shadow-sm"
               style={{
-                backgroundColor: colors.background,
-                borderColor: colors.accent + "40",
-                color: colors.text,
+                backgroundColor: '#ffffff',
+                borderColor: '#e5e7eb',
+                color: '#000000',
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = '#006cb5';
+                e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = '#e5e7eb';
+                e.target.style.boxShadow = 'none';
               }}
             />
           </div>
@@ -163,48 +190,44 @@ const Enquiry = () => {
           <table className="w-full text-left border-collapse">
             <thead
               className="sticky top-0 z-20"
-              style={{ backgroundColor: colors.background }}
+              style={{ 
+                backgroundColor: '#006cb5',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+              }}
             >
-              <tr style={{ backgroundColor: colors.accent + "10" }}>
+              <tr>
                 <th
-                  className="p-4 font-semibold text-sm w-16"
-                  style={{ color: colors.textSecondary }}
+                  className="p-4 font-bold text-sm w-16 text-white"
                 >
                   S.No
                 </th>
                 <th
-                  className="p-4 font-semibold text-sm"
-                  style={{ color: colors.textSecondary }}
+                  className="p-4 font-bold text-sm text-white"
                 >
                   Full Name
                 </th>
                 <th
-                  className="p-4 font-semibold text-sm"
-                  style={{ color: colors.textSecondary }}
+                  className="p-4 font-bold text-sm text-white"
                 >
                   Email
                 </th>
                 <th
-                  className="p-4 font-semibold text-sm"
-                  style={{ color: colors.textSecondary }}
+                  className="p-4 font-bold text-sm text-white"
                 >
                   Phone
                 </th>
                 <th
-                  className="p-4 font-semibold text-sm"
-                  style={{ color: colors.textSecondary }}
+                  className="p-4 font-bold text-sm text-white"
                 >
                   Country
                 </th>
                 <th
-                  className="p-4 font-semibold text-sm"
-                  style={{ color: colors.textSecondary }}
+                  className="p-4 font-bold text-sm text-white"
                 >
                   Message
                 </th>
                 <th
-                  className="p-4 font-semibold text-sm text-right"
-                  style={{ color: colors.textSecondary }}
+                  className="p-4 font-bold text-sm text-right text-white"
                 >
                   Actions
                 </th>
@@ -249,8 +272,8 @@ const Enquiry = () => {
                       {(pagination.page - 1) * pagination.limit + index + 1}
                     </td>
                     <td
-                      className="p-4 font-medium"
-                      style={{ color: colors.text }}
+                      className="p-4 font-bold text-base"
+                      style={{ color: '#006cb5' }}
                     >
                       {item.fullName}
                     </td>
@@ -289,19 +312,37 @@ const Enquiry = () => {
                           onClick={() =>
                             navigate(`/dashboard/enquiry/view/${item._id}`)
                           }
-                          className="p-2 rounded hover:bg-green-100 text-green-600 transition-colors cursor-pointer"
+                          className="p-2.5 rounded-xl transition-all hover:scale-110 cursor-pointer shadow-sm"
+                          style={{ backgroundColor: '#1db64c20', color: '#1db64c' }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#1db64c';
+                            e.currentTarget.style.color = '#ffffff';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#1db64c20';
+                            e.currentTarget.style.color = '#1db64c';
+                          }}
                           title="View"
                         >
-                          <MdVisibility size={18} />
+                          <MdVisibility size={20} />
                         </button>
                         <button
                           onClick={() =>
                             navigate(`/dashboard/enquiry/edit/${item._id}`)
                           }
-                          className="p-2 rounded hover:bg-blue-100 text-blue-600 transition-colors cursor-pointer"
+                          className="p-2.5 rounded-xl transition-all hover:scale-110 cursor-pointer shadow-sm"
+                          style={{ backgroundColor: '#006cb520', color: '#006cb5' }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#006cb5';
+                            e.currentTarget.style.color = '#ffffff';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#006cb520';
+                            e.currentTarget.style.color = '#006cb5';
+                          }}
                           title="Edit"
                         >
-                          <MdEdit size={18} />
+                          <MdEdit size={20} />
                         </button>
                         <button
                           onClick={() => handleDelete(item._id)}

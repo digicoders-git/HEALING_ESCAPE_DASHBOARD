@@ -71,164 +71,160 @@ const AddGallery = () => {
   };
 
   return (
-    <div className="p-6 min-h-screen text-left">
-      <div className="flex items-center gap-4 mb-6">
-        <button
-          onClick={() => navigate("/dashboard/gallery")}
-          className="p-2 rounded-full hover:bg-black/5 transition-colors cursor-pointer"
-          style={{ color: colors.text }}
-        >
-          <MdArrowBack size={24} />
-        </button>
-        <div>
-          <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
-            Add Gallery Item
-          </h1>
-          <p className="text-sm" style={{ color: colors.textSecondary }}>
-            Upload infrastructure or facility photos
-          </p>
+    <div className="min-h-screen" style={{ backgroundColor: '#f8fafc' }}>
+      {/* Modern Header */}
+      <div className="sticky top-0 z-50 backdrop-blur-md border-b" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', borderColor: '#e5e7eb' }}>
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate("/dashboard/gallery")}
+              className="p-2.5 rounded-xl transition-all hover:scale-110 cursor-pointer"
+              style={{ backgroundColor: '#f1f5f9', color: '#1e293b' }}
+            >
+              <MdArrowBack size={24} />
+            </button>
+            <div className="flex-1">
+              <h1 className="text-2xl font-black" style={{ color: '#000000' }}>
+                Add Gallery Item
+              </h1>
+              <p className="text-sm font-medium" style={{ color: '#64748b' }}>
+                Upload infrastructure or facility photos
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="max-w-full grid grid-cols-1 md:grid-cols-2 gap-8"
-      >
-        <div className="space-y-6">
-          <div
-            className="p-6 rounded-lg border shadow-sm space-y-4"
-            style={{
-              backgroundColor: colors.background,
-              borderColor: colors.accent + "30",
-            }}
-          >
-            <div className="space-y-2">
-              <label
-                className="text-sm font-medium"
-                style={{ color: colors.text }}
-              >
-                Category
-              </label>
-              <input
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                placeholder="e.g. Hospitals & Infrastructure"
-                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
-                style={{
-                  backgroundColor: colors.background,
-                  borderColor: colors.accent + "40",
-                  color: colors.text,
-                }}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label
-                className="text-sm font-medium"
-                style={{ color: colors.text }}
-              >
-                Caption
-              </label>
-              <textarea
-                name="caption"
-                value={formData.caption}
-                onChange={handleChange}
-                placeholder="Brief description of the photo"
-                rows={4}
-                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
-                style={{
-                  backgroundColor: colors.background,
-                  borderColor: colors.accent + "40",
-                  color: colors.text,
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex-1 py-3 rounded font-bold shadow-lg flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-70 cursor-pointer"
-              style={{
-                backgroundColor: colors.primary,
-                color: colors.background,
-              }}
-            >
-              {loading ? (
-                <Loader size={20} color="#fff" />
-              ) : (
-                "Upload to Gallery"
-              )}
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate("/dashboard/gallery")}
-              className="px-8 py-3 rounded font-bold border hover:bg-black/5 transition-all text-center cursor-pointer"
-              style={{ borderColor: colors.accent + "40", color: colors.text }}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <div
-            className="p-6 rounded-lg border shadow-sm space-y-4 h-full flex flex-col"
-            style={{
-              backgroundColor: colors.background,
-              borderColor: colors.accent + "30",
-            }}
-          >
-            <label
-              className="text-sm font-medium"
-              style={{ color: colors.text }}
-            >
-              Image Upload
-            </label>
-            <div
-              className="flex-1 min-h-[300px] relative rounded-lg border-2 border-dashed flex flex-col items-center justify-center cursor-pointer overflow-hidden group hover:border-primary/50 transition-colors"
-              style={{ borderColor: colors.accent + "30" }}
-              onClick={() => document.getElementById("image-upload").click()}
-            >
-              {imagePreview ? (
-                <img
-                  src={imagePreview}
-                  className="w-full h-full object-cover"
-                  alt="Preview"
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-6">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-2xl shadow-lg border space-y-6" style={{ borderColor: '#e5e7eb' }}>
+              <div className="space-y-2">
+                <label className="text-sm font-bold uppercase tracking-wider" style={{ color: '#1e293b' }}>
+                  Category *
+                </label>
+                <input
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  placeholder="e.g. Hospitals & Infrastructure"
+                  required
+                  className="w-full px-4 py-3 rounded-xl border-2 outline-none transition-all"
+                  style={{
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    color: '#000000',
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#006cb5'}
+                  onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
                 />
-              ) : (
-                <>
-                  <MdCloudUpload
-                    size={48}
-                    className="text-gray-400 group-hover:scale-110 transition-transform"
-                  />
-                  <span
-                    className="text-sm mt-3 font-medium"
-                    style={{ color: colors.textSecondary }}
-                  >
-                    Click to select image
-                  </span>
-                  <span
-                    className="text-xs mt-1"
-                    style={{ color: colors.textSecondary }}
-                  >
-                    Support JPG, PNG, WEBP
-                  </span>
-                </>
-              )}
-              <input
-                id="image-upload"
-                type="file"
-                hidden
-                accept="image/*"
-                onChange={handleImageChange}
-              />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-bold uppercase tracking-wider" style={{ color: '#1e293b' }}>
+                  Caption *
+                </label>
+                <textarea
+                  name="caption"
+                  value={formData.caption}
+                  onChange={handleChange}
+                  placeholder="Brief description of the photo"
+                  rows={4}
+                  required
+                  className="w-full px-4 py-3 rounded-xl border-2 outline-none transition-all"
+                  style={{
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    color: '#000000',
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#006cb5'}
+                  onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 py-3.5 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-70 cursor-pointer"
+                style={{
+                  backgroundColor: '#006cb5',
+                  color: '#ffffff',
+                }}
+              >
+                {loading ? (
+                  <Loader size={20} color="#fff" />
+                ) : (
+                  "Upload to Gallery"
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("/dashboard/gallery")}
+                className="px-8 py-3.5 rounded-xl font-bold border-2 hover:bg-black/5 transition-all text-center cursor-pointer"
+                style={{ borderColor: '#e5e7eb', color: '#1e293b' }}
+              >
+                Cancel
+              </button>
             </div>
           </div>
-        </div>
-      </form>
+
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-2xl shadow-lg border h-full flex flex-col" style={{ borderColor: '#e5e7eb' }}>
+              <label className="text-sm font-bold uppercase tracking-wider mb-4" style={{ color: '#1e293b' }}>
+                Image Upload *
+              </label>
+              <div
+                className="flex-1 min-h-[400px] relative rounded-2xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer overflow-hidden group transition-all"
+                style={{ borderColor: '#e5e7eb' }}
+                onClick={() => document.getElementById("image-upload").click()}
+                onMouseEnter={(e) => e.target.style.borderColor = '#006cb5'}
+                onMouseLeave={(e) => e.target.style.borderColor = '#e5e7eb'}
+              >
+                {imagePreview ? (
+                  <img
+                    src={imagePreview}
+                    className="w-full h-full object-cover rounded-xl"
+                    alt="Preview"
+                  />
+                ) : (
+                  <>
+                    <MdCloudUpload
+                      size={64}
+                      className="text-gray-400 group-hover:scale-110 transition-transform"
+                      style={{ color: '#006cb5' }}
+                    />
+                    <span
+                      className="text-base mt-4 font-bold"
+                      style={{ color: '#1e293b' }}
+                    >
+                      Click to select image
+                    </span>
+                    <span
+                      className="text-sm mt-2"
+                      style={{ color: '#64748b' }}
+                    >
+                      Support JPG, PNG, WEBP
+                    </span>
+                  </>
+                )}
+                <input
+                  id="image-upload"
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

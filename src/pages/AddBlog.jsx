@@ -200,135 +200,168 @@ const AddBlog = () => {
   };
 
   return (
-    <div className="p-6 min-h-screen">
+    <div className="min-h-screen" style={{ backgroundColor: '#f9fafb' }}>
       <style>{customJoditStyles}</style>
-      <div className="flex items-center gap-4 mb-6">
-        <button
-          onClick={() => navigate(-1)}
-          className="p-2 rounded-full hover:bg-black/5 transition-colors cursor-pointer"
-          style={{ color: colors.text }}
-        >
-          <MdArrowBack size={24} />
-        </button>
-        <div>
-          <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
-            Add New Blog
-          </h1>
-          <p className="text-sm" style={{ color: colors.textSecondary }}>
-            Create a new article for your medical tourism platform
-          </p>
+      
+      {/* Premium Gradient Header */}
+      <div 
+        className="sticky top-0 z-50 shadow-lg"
+        style={{
+          background: 'linear-gradient(135deg, #006cb5 0%, #004d84 100%)'
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-6">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2.5 rounded-xl transition-all hover:scale-110 cursor-pointer"
+              style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#ffffff' }}
+            >
+              <MdArrowBack size={24} />
+            </button>
+            <div className="flex-1">
+              <h1 className="text-3xl font-black text-white">
+                Add New Blog
+              </h1>
+              <p className="text-sm mt-1 font-medium" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
+                Create a new article for your medical tourism platform
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="grid grid-cols-1 lg:grid-cols-3 gap-6"
-      >
-        {/* Main Content Area */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Card */}
-          <div
-            className="p-6 rounded-lg border shadow-sm space-y-4"
-            style={{
-              backgroundColor: colors.background,
-              borderColor: colors.accent + "30",
-            }}
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label
-                  className="text-sm font-medium"
-                  style={{ color: colors.text }}
-                >
-                  Title
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+        >
+          {/* Main Content Area */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Card */}
+            <div className="bg-white p-8 rounded-2xl shadow-xl border space-y-6" style={{ borderColor: '#e5e7eb' }}>
+              {/* Section Header */}
+              <div className="flex items-center gap-3 pb-4 border-b-2" style={{ borderColor: '#f1f5f9' }}>
+                <div className="w-1 h-8 rounded-full" style={{ backgroundColor: '#006cb5' }}></div>
+                <h2 className="text-xl font-black" style={{ color: '#1f2937' }}>Blog Content</h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2.5">
+                  <label className="text-sm font-bold" style={{ color: '#1f2937' }}>
+                    Title *
+                  </label>
+                  <input
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    placeholder="Enter blog title"
+                    required
+                    className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium"
+                    style={{
+                      backgroundColor: '#ffffff',
+                      borderColor: '#e5e7eb',
+                      color: '#1f2937',
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#006cb5';
+                      e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#e5e7eb';
+                      e.target.style.boxShadow = 'none';
+                    }}
+                  />
+                </div>
+                <div className="space-y-2.5">
+                  <label className="text-sm font-bold" style={{ color: '#1f2937' }}>
+                    Category *
+                  </label>
+                  <input
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                    placeholder="Enter category name"
+                    required
+                    className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium"
+                    style={{
+                      backgroundColor: '#ffffff',
+                      borderColor: '#e5e7eb',
+                      color: '#1f2937',
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#006cb5';
+                      e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#e5e7eb';
+                      e.target.style.boxShadow = 'none';
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2.5">
+                <label className="text-sm font-bold" style={{ color: '#1f2937' }}>
+                  Excerpt (Short Description) *
                 </label>
-                <input
-                  name="title"
-                  value={formData.title}
+                <textarea
+                  name="excerpt"
+                  value={formData.excerpt}
                   onChange={handleChange}
-                  placeholder="Enter blog title"
-                  className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
+                  placeholder="Brief summary of the blog"
+                  rows={2}
+                  required
+                  className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium resize-none"
                   style={{
-                    backgroundColor: colors.background,
-                    borderColor: colors.accent + "40",
-                    color: colors.text,
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    color: '#1f2937',
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#006cb5';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#e5e7eb';
+                    e.target.style.boxShadow = 'none';
                   }}
                 />
               </div>
-              <div className="space-y-2">
-                <label
-                  className="text-sm font-medium"
-                  style={{ color: colors.text }}
-                >
-                  Category
+
+              <div className="space-y-2.5">
+                <label className="text-sm font-bold" style={{ color: '#1f2937' }}>
+                  Introduction *
                 </label>
-                <input
-                  name="category"
-                  value={formData.category}
+                <textarea
+                  name="introduction"
+                  value={formData.introduction}
                   onChange={handleChange}
-                  placeholder="Enter category name"
-                  className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
+                  placeholder="Introductory paragraph"
+                  rows={3}
+                  required
+                  className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium resize-none"
                   style={{
-                    backgroundColor: colors.background,
-                    borderColor: colors.accent + "40",
-                    color: colors.text,
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    color: '#1f2937',
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#006cb5';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#e5e7eb';
+                    e.target.style.boxShadow = 'none';
                   }}
                 />
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <label
-                className="text-sm font-medium"
-                style={{ color: colors.text }}
-              >
-                Excerpt (Short Description)
-              </label>
-              <textarea
-                name="excerpt"
-                value={formData.excerpt}
-                onChange={handleChange}
-                placeholder="Brief summary of the blog"
-                rows={2}
-                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
-                style={{
-                  backgroundColor: colors.background,
-                  borderColor: colors.accent + "40",
-                  color: colors.text,
-                }}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label
-                className="text-sm font-medium"
-                style={{ color: colors.text }}
-              >
-                Introduction
-              </label>
-              <textarea
-                name="introduction"
-                value={formData.introduction}
-                onChange={handleChange}
-                placeholder="Introductory paragraph"
-                rows={3}
-                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
-                style={{
-                  backgroundColor: colors.background,
-                  borderColor: colors.accent + "40",
-                  color: colors.text,
-                }}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label
-                className="text-sm font-medium"
-                style={{ color: colors.text }}
-              >
-                Content
-              </label>
-              <div className="min-h-[400px]">
+              <div className="space-y-2.5">
+                <label className="text-sm font-bold" style={{ color: '#1f2937' }}>
+                  Content *
+                </label>
+                <div className="min-h-[400px] rounded-xl overflow-hidden border-2" style={{ borderColor: '#e5e7eb' }}>
                 <JoditEditor
                   ref={editor}
                   value={formData.content}
@@ -341,64 +374,70 @@ const AddBlog = () => {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label
-                className="text-sm font-medium"
-                style={{ color: colors.text }}
-              >
-                Why This Matters
-              </label>
-              <textarea
-                name="whyThisMatters"
-                value={formData.whyThisMatters}
-                onChange={handleChange}
-                placeholder="Explain why this article is important for patients"
-                rows={2}
-                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
-                style={{
-                  backgroundColor: colors.background,
-                  borderColor: colors.accent + "40",
-                  color: colors.text,
-                }}
-              />
+              <div className="space-y-2.5">
+                <label className="text-sm font-bold" style={{ color: '#1f2937' }}>
+                  Why This Matters
+                </label>
+                <textarea
+                  name="whyThisMatters"
+                  value={formData.whyThisMatters}
+                  onChange={handleChange}
+                  placeholder="Explain why this article is important for patients"
+                  rows={2}
+                  className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium resize-none"
+                  style={{
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    color: '#1f2937',
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#006cb5';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#e5e7eb';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Sidebar Space */}
-        <div className="space-y-6">
-          {/* Image Upload */}
-          <div
-            className="p-6 rounded-lg border shadow-sm space-y-4"
-            style={{
-              backgroundColor: colors.background,
-              borderColor: colors.accent + "30",
-            }}
-          >
-            <label
-              className="text-sm font-medium"
-              style={{ color: colors.text }}
-            >
-              Blog Image
-            </label>
+          {/* Sidebar Space */}
+          <div className="space-y-6">
+            {/* Image Upload */}
+            <div className="bg-white p-6 rounded-2xl shadow-xl border space-y-4" style={{ borderColor: '#e5e7eb' }}>
+              <div className="flex items-center gap-3 pb-3 border-b-2" style={{ borderColor: '#f1f5f9' }}>
+                <div className="w-1 h-6 rounded-full" style={{ backgroundColor: '#006cb5' }}></div>
+                <h3 className="text-lg font-black" style={{ color: '#1f2937' }}>Blog Image</h3>
+              </div>
             <div
-              className="relative aspect-video rounded-lg border-2 border-dashed flex flex-col items-center justify-center cursor-pointer overflow-hidden group hover:border-primary/50 transition-colors"
-              style={{ borderColor: colors.accent + "30" }}
+              className="relative aspect-video rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer overflow-hidden group hover:border-primary/50 transition-all"
+              style={{ borderColor: '#bae6fd', backgroundColor: '#f0f9ff' }}
               onClick={() => document.getElementById("image-upload").click()}
             >
               {imagePreview ? (
-                <img
-                  src={imagePreview}
-                  className="w-full h-full object-cover"
-                  alt="Preview"
-                />
+                <>
+                  <img
+                    src={imagePreview}
+                    className="w-full h-full object-cover"
+                    alt="Preview"
+                  />
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="text-center">
+                      <MdCloudUpload className="text-white mx-auto mb-2" size={40} />
+                      <p className="text-white text-sm font-bold">Change Image</p>
+                    </div>
+                  </div>
+                </>
               ) : (
                 <>
                   <MdCloudUpload
                     size={48}
-                    className="text-gray-400 group-hover:scale-110 transition-transform"
+                    style={{ color: '#006cb5' }}
+                    className="group-hover:scale-110 transition-transform"
                   />
-                  <span className="text-xs mt-2 text-gray-500">
+                  <span className="text-sm mt-2 font-semibold" style={{ color: '#6b7280' }}>
                     Click to upload image
                   </span>
                 </>
@@ -413,20 +452,12 @@ const AddBlog = () => {
             </div>
           </div>
 
-          {/* Related Blogs */}
-          <div
-            className="p-6 rounded-lg border shadow-sm space-y-4"
-            style={{
-              backgroundColor: colors.background,
-              borderColor: colors.accent + "30",
-            }}
-          >
-            <label
-              className="text-sm font-medium"
-              style={{ color: colors.text }}
-            >
-              Related Blogs
-            </label>
+            {/* Related Blogs */}
+            <div className="bg-white p-6 rounded-2xl shadow-xl border space-y-4" style={{ borderColor: '#e5e7eb' }}>
+              <div className="flex items-center gap-3 pb-3 border-b-2" style={{ borderColor: '#f1f5f9' }}>
+                <div className="w-1 h-6 rounded-full" style={{ backgroundColor: '#006cb5' }}></div>
+                <h3 className="text-lg font-black" style={{ color: '#1f2937' }}>Related Blogs</h3>
+              </div>
             <div className="max-h-60 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
               {blogs.map((blog) => (
                 <div
@@ -474,30 +505,38 @@ const AddBlog = () => {
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex flex-col gap-3">
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 rounded font-bold shadow-lg flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-70 cursor-pointer"
-              style={{
-                backgroundColor: colors.primary,
-                color: colors.background,
-              }}
-            >
-              {loading ? <Loader size={20} color="#fff" /> : "Create Blog"}
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate(-1)}
-              className="w-full py-3 rounded font-bold border hover:bg-black/5 transition-all cursor-pointer"
-              style={{ borderColor: colors.accent + "40", color: colors.text }}
-            >
-              Cancel
-            </button>
+            {/* Actions */}
+            <div className="flex flex-col gap-3">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-4 rounded-xl font-bold shadow-xl flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-70 cursor-pointer"
+                style={{
+                  backgroundColor: '#1db64c',
+                  color: '#ffffff',
+                }}
+              >
+                {loading ? (
+                  <>
+                    <Loader size={22} color="#fff" />
+                    <span>Creating...</span>
+                  </>
+                ) : (
+                  "Create Blog"
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                className="w-full py-4 rounded-xl font-bold border-2 hover:bg-gray-50 transition-all cursor-pointer"
+                style={{ borderColor: '#e5e7eb', color: '#6b7280' }}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

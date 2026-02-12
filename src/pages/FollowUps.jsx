@@ -167,18 +167,15 @@ const FollowUps = () => {
         <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
           <div>
             <div className="flex items-center gap-3">
-              <h1
-                className="text-xl md:text-2xl font-bold"
-                style={{ color: colors.text }}
-              >
+              <h1 className="text-3xl font-black" style={{ color: '#000000' }}>
                 Interaction History
               </h1>
               {!loading && (
                 <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-sm"
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-black shadow-lg"
                   style={{
-                    backgroundColor: colors.primary,
-                    color: colors.background,
+                    backgroundColor: '#006cb5',
+                    color: '#ffffff',
                   }}
                 >
                   {filteredData.length}
@@ -195,23 +192,30 @@ const FollowUps = () => {
         </div>
 
         <div className="flex flex-col md:flex-row gap-4">
-          <div className="relative flex-1">
+          <div className="relative w-full">
             <MdSearch
-              className="absolute left-3 top-2.5 z-10 opacity-50"
-              style={{ color: colors.textSecondary }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10"
+              style={{ color: '#006cb5' }}
+              size={22}
             />
             <input
               type="text"
               placeholder="Search history..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded border focus:ring-1 outline-none text-sm transition-all"
+              className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium shadow-sm"
               style={{
-                backgroundColor: isDarkMode
-                  ? colors.accent + "10"
-                  : colors.background,
-                borderColor: colors.accent + "30",
-                color: colors.text,
+                backgroundColor: '#ffffff',
+                borderColor: '#e5e7eb',
+                color: '#000000',
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = '#006cb5';
+                e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = '#e5e7eb';
+                e.target.style.boxShadow = 'none';
               }}
             />
           </div>
@@ -244,37 +248,37 @@ const FollowUps = () => {
             <>
               {/* Desktop View */}
               <div
-                className="hidden md:block rounded-xl border overflow-hidden shadow-sm"
+                className="hidden md:block rounded-xl border shadow-sm overflow-hidden"
                 style={{ borderColor: colors.accent + "20" }}
               >
                 <table className="w-full text-left border-collapse">
                   <thead
                     className="sticky top-0 z-20"
-                    style={{ backgroundColor: colors.background }}
+                    style={{ 
+                      backgroundColor: '#006cb5',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                    }}
                   >
-                    <tr
-                      className="border-b"
-                      style={{ borderColor: colors.accent + "20" }}
-                    >
-                      <th className="p-4 font-bold text-xs opacity-60 uppercase tracking-widest">
+                    <tr>
+                      <th className="p-4 font-bold text-sm text-white">
                         #
                       </th>
-                      <th className="p-4 font-bold text-xs opacity-60 uppercase tracking-widest">
+                      <th className="p-4 font-bold text-sm text-white">
                         Lead Name
                       </th>
-                      <th className="p-4 font-bold text-xs opacity-60 uppercase tracking-widest">
+                      <th className="p-4 font-bold text-sm text-white">
                         Handled By
                       </th>
-                      <th className="p-4 font-bold text-xs opacity-60 uppercase tracking-widest">
+                      <th className="p-4 font-bold text-sm text-white">
                         Note
                       </th>
-                      <th className="p-4 font-bold text-xs opacity-60 uppercase tracking-widest">
+                      <th className="p-4 font-bold text-sm text-white">
                         Next Date
                       </th>
-                      <th className="p-4 font-bold text-xs opacity-60 uppercase tracking-widest">
+                      <th className="p-4 font-bold text-sm text-white">
                         Status
                       </th>
-                      <th className="p-4 font-bold text-xs opacity-60 uppercase tracking-widest text-right">
+                      <th className="p-4 font-bold text-sm text-white text-right">
                         Actions
                       </th>
                     </tr>
@@ -283,11 +287,18 @@ const FollowUps = () => {
                     {filteredData.map((item, index) => (
                       <tr
                         key={item._id}
-                        className="border-b last:border-0 hover:bg-black/5 transition-colors text-sm"
+                        className="border-b last:border-0 transition-colors text-sm"
                         style={{ borderColor: colors.accent + "10" }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.backgroundColor =
+                            colors.accent + "10")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.backgroundColor = "transparent")
+                        }
                       >
                         <td className="p-4 opacity-50">{index + 1}</td>
-                        <td className="p-4 font-bold">
+                        <td className="p-4 font-bold" style={{ color: '#006cb5' }}>
                           {item.lead?.fullName || "N/A"}
                         </td>
                         <td className="p-4">
@@ -318,9 +329,18 @@ const FollowUps = () => {
                                 `/dashboard/manage-leads/view/${item.lead?._id}`,
                               )
                             }
-                            className="p-2 rounded-lg hover:bg-emerald-50 text-emerald-600"
+                            className="p-2.5 rounded-xl transition-all hover:scale-110 cursor-pointer shadow-sm"
+                            style={{ backgroundColor: '#1db64c20', color: '#1db64c' }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = '#1db64c';
+                              e.currentTarget.style.color = '#ffffff';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = '#1db64c20';
+                              e.currentTarget.style.color = '#1db64c';
+                            }}
                           >
-                            <MdVisibility size={18} />
+                            <MdVisibility size={20} />
                           </button>
                         </td>
                       </tr>
