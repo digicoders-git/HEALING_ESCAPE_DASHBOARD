@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useTheme } from "../context/ThemeContext";
 import { createBlog, getBlogs } from "../apis/blog";
 import { MdArrowBack, MdCloudUpload, MdClose } from "react-icons/md";
@@ -16,7 +16,7 @@ const AddBlog = () => {
   const [loading, setLoading] = useState(false);
   const [blogs, setBlogs] = useState([]);
 
-  const config = {
+  const config = useMemo(() => ({
     readonly: false,
     height: 500,
     theme: colors.background === "#ffffff" ? "default" : "dark",
@@ -24,22 +24,36 @@ const AddBlog = () => {
       "bold",
       "italic",
       "underline",
+      "strikethrough",
       "|",
       "ul",
       "ol",
       "|",
       "font",
       "fontsize",
+      "brush",
+      "paragraph",
       "|",
-      "align",
+      "image",
+      "video",
+      "table",
       "link",
       "|",
+      "align",
       "undo",
       "redo",
       "|",
-      "source",
+      "hr",
+      "eraser",
+      "copyformat",
+      "|",
       "fullsize",
+      "selectall",
+      "source",
     ],
+    uploader: {
+      insertImageAsBase64URI: true,
+    },
     placeholder: "Start typing your blog content...",
     askBeforePasteFromWord: false,
     askBeforePasteHTML: false,
@@ -49,7 +63,8 @@ const AddBlog = () => {
       color: colors.text,
       fontFamily: "inherit",
     },
-  };
+    imageDefaultWidth: "100%",
+  }), [colors]);
 
   const customJoditStyles = `
     .jodit-container {
@@ -321,7 +336,7 @@ const AddBlog = () => {
                   onBlur={(newContent) =>
                     setFormData((prev) => ({ ...prev, content: newContent }))
                   }
-                  onChange={(newContent) => {}}
+                  onChange={(newContent) => { }}
                 />
               </div>
             </div>
