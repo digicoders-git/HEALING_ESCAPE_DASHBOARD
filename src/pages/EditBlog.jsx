@@ -56,8 +56,21 @@ const EditBlog = () => {
       placeholder: "Start typing your blog content...",
       askBeforePasteFromWord: false,
       askBeforePasteHTML: false,
-      defaultActionOnPaste: "insert_clear_html",
-      imageDefaultWidth: "100%",
+      defaultActionOnPaste: "insert_as_text",
+      imageDefaultWidth: "auto",
+      resizer: {
+        showSize: true,
+        hideSizeTimeout: 0,
+      },
+      extraCSS: `
+        ul { list-style-type: disc !important; padding-left: 2rem !important; margin-bottom: 1rem !important; }
+        ol { list-style-type: decimal !important; padding-left: 2rem !important; margin-bottom: 1rem !important; }
+        li { margin-bottom: 0.5rem !important; }
+        img { max-width: 100%; height: auto; display: inline-block; margin: 10px 0; border-radius: 8px; }
+        img[style*="float:left"] { margin-right: 20px !important; margin-bottom: 15px !important; float: left; }
+        img[style*="float:right"] { margin-left: 20px !important; margin-bottom: 15px !important; float: right; }
+        .jodit-wysiwyg p { margin-bottom: 1rem !important; line-height: 1.7 !important; }
+      `,
     }),
     [],
   );
@@ -220,23 +233,34 @@ const EditBlog = () => {
         </div>
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="grid grid-cols-1 lg:grid-cols-3 gap-6"
-      >
+      <form onSubmit={handleSubmit} className="space-y-8">
         {/* Main Content Area */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6">
           <div
-            className="p-6 rounded-lg border shadow-sm space-y-4"
+            className="p-8 rounded-2xl border shadow-xl space-y-6"
             style={{
               backgroundColor: colors.background,
               borderColor: colors.accent + "30",
             }}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
+            {/* Section Header */}
+            <div
+              className="flex items-center gap-3 pb-4 border-b-2"
+              style={{ borderColor: colors.accent + "10" }}
+            >
+              <div
+                className="w-1 h-8 rounded-full"
+                style={{ backgroundColor: colors.primary }}
+              ></div>
+              <h2 className="text-xl font-black" style={{ color: colors.text }}>
+                Blog Content
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2.5">
                 <label
-                  className="text-sm font-medium"
+                  className="text-sm font-bold"
                   style={{ color: colors.text }}
                 >
                   Title
@@ -246,17 +270,17 @@ const EditBlog = () => {
                   value={formData.title}
                   onChange={handleChange}
                   placeholder="Enter blog title"
-                  className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
+                  className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium"
                   style={{
                     backgroundColor: colors.background,
-                    borderColor: colors.accent + "40",
-                    // color: colors.text,
+                    borderColor: colors.accent + "30",
+                    color: colors.text,
                   }}
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 <label
-                  className="text-sm font-medium"
+                  className="text-sm font-bold"
                   style={{ color: colors.text }}
                 >
                   Category
@@ -266,19 +290,19 @@ const EditBlog = () => {
                   value={formData.category}
                   onChange={handleChange}
                   placeholder="Enter category name"
-                  className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
+                  className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium"
                   style={{
                     backgroundColor: colors.background,
-                    borderColor: colors.accent + "40",
-                    // color: colors.text,
+                    borderColor: colors.accent + "30",
+                    color: colors.text,
                   }}
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               <label
-                className="text-sm font-medium"
+                className="text-sm font-bold"
                 style={{ color: colors.text }}
               >
                 Excerpt (Short Description)
@@ -288,19 +312,19 @@ const EditBlog = () => {
                 value={formData.excerpt}
                 onChange={handleChange}
                 placeholder="Brief summary of the blog"
-                rows={8}
-                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
+                rows={4}
+                className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium"
                 style={{
                   backgroundColor: colors.background,
-                  borderColor: colors.accent + "40",
-                  // color: colors.text,
+                  borderColor: colors.accent + "30",
+                  color: colors.text,
                 }}
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               <label
-                className="text-sm font-medium"
+                className="text-sm font-bold"
                 style={{ color: colors.text }}
               >
                 Introduction
@@ -310,24 +334,27 @@ const EditBlog = () => {
                 value={formData.introduction}
                 onChange={handleChange}
                 placeholder="Introductory paragraph"
-                rows={8}
-                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
+                rows={4}
+                className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium"
                 style={{
                   backgroundColor: colors.background,
-                  borderColor: colors.accent + "40",
-                  // color: colors.text,
+                  borderColor: colors.accent + "30",
+                  color: colors.text,
                 }}
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               <label
-                className="text-sm font-medium"
+                className="text-sm font-bold"
                 style={{ color: colors.text }}
               >
                 Content
               </label>
-              <div className="min-h-[400px]">
+              <div
+                className="min-h-[400px] rounded-xl overflow-hidden border-2"
+                style={{ borderColor: colors.accent + "30" }}
+              >
                 <JoditEditor
                   ref={editor}
                   value={formData.content}
@@ -340,9 +367,9 @@ const EditBlog = () => {
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               <label
-                className="text-sm font-medium"
+                className="text-sm font-bold"
                 style={{ color: colors.text }}
               >
                 Why This Matters
@@ -353,137 +380,157 @@ const EditBlog = () => {
                 onChange={handleChange}
                 placeholder="Explain why this article is important for patients"
                 rows={2}
-                className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
+                className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium resize-none"
                 style={{
                   backgroundColor: colors.background,
-                  borderColor: colors.accent + "40",
+                  borderColor: colors.accent + "30",
                   color: colors.text,
                 }}
               />
             </div>
           </div>
-        </div>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Image Upload */}
-          <div
-            className="p-6 rounded-lg border shadow-sm space-y-4"
-            style={{
-              backgroundColor: colors.background,
-              borderColor: colors.accent + "30",
-            }}
-          >
-            <label
-              className="text-sm font-medium"
-              style={{ color: colors.text }}
-            >
-              Blog Image
-            </label>
+          {/* Middle Section: Image and Related Blogs */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Image Upload */}
             <div
-              className="relative aspect-video rounded-lg border-2 border-dashed flex flex-col items-center justify-center cursor-pointer overflow-hidden group hover:border-primary/50 transition-colors"
-              style={{ borderColor: colors.accent + "30" }}
-              onClick={() => document.getElementById("image-upload").click()}
+              className="p-8 rounded-2xl border shadow-xl space-y-4"
+              style={{
+                backgroundColor: colors.background,
+                borderColor: colors.accent + "30",
+              }}
             >
-              <img
-                src={imagePreview}
-                className="w-full h-full object-cover"
-                alt="Preview"
-              />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white">
-                <MdCloudUpload size={32} />
-                <span className="text-xs mt-1">Change Image</span>
+              <div
+                className="flex items-center gap-3 pb-3 border-b-2"
+                style={{ borderColor: colors.accent + "10" }}
+              >
+                <div
+                  className="w-1 h-6 rounded-full"
+                  style={{ backgroundColor: colors.primary }}
+                ></div>
+                <h3
+                  className="text-lg font-black"
+                  style={{ color: colors.text }}
+                >
+                  Blog Image
+                </h3>
               </div>
-              <input
-                id="image-upload"
-                type="file"
-                hidden
-                accept="image/*"
-                onChange={handleImageChange}
-              />
+              <div
+                className="relative aspect-video rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer overflow-hidden group hover:border-primary/50 transition-colors"
+                style={{ borderColor: colors.accent + "30" }}
+                onClick={() => document.getElementById("image-upload").click()}
+              >
+                <img
+                  src={imagePreview}
+                  className="w-full h-full object-cover"
+                  alt="Preview"
+                />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white">
+                  <MdCloudUpload size={32} />
+                  <span className="text-xs mt-1">Change Image</span>
+                </div>
+                <input
+                  id="image-upload"
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Related Blogs */}
-          <div
-            className="p-6 rounded-lg border shadow-sm space-y-4"
-            style={{
-              backgroundColor: colors.background,
-              borderColor: colors.accent + "30",
-            }}
-          >
-            <label
-              className="text-sm font-medium"
-              style={{ color: colors.text }}
+            {/* Related Blogs */}
+            <div
+              className="p-8 rounded-2xl border shadow-xl space-y-4"
+              style={{
+                backgroundColor: colors.background,
+                borderColor: colors.accent + "30",
+              }}
             >
-              Related Blogs
-            </label>
-            <div className="max-h-60 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
-              {blogs
-                .filter((b) => b._id !== id)
-                .map((blog) => (
-                  <div
-                    key={blog._id}
-                    onClick={() => handleRelatedBlogToggle(blog._id)}
-                    className="flex items-center gap-2 p-2 rounded cursor-pointer transition-colors border"
-                    style={{
-                      backgroundColor: formData.relatedIds.includes(blog._id)
-                        ? colors.primary + "10"
-                        : "transparent",
-                      borderColor: formData.relatedIds.includes(blog._id)
-                        ? colors.primary
-                        : colors.accent + "20",
-                    }}
-                  >
+              <div
+                className="flex items-center gap-3 pb-3 border-b-2"
+                style={{ borderColor: colors.accent + "10" }}
+              >
+                <div
+                  className="w-1 h-6 rounded-full"
+                  style={{ backgroundColor: colors.primary }}
+                ></div>
+                <h3
+                  className="text-lg font-black"
+                  style={{ color: colors.text }}
+                >
+                  Related Blogs
+                </h3>
+              </div>
+              <div className="max-h-60 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+                {blogs
+                  .filter((b) => b._id !== id)
+                  .map((blog) => (
                     <div
-                      className="w-4 h-4 rounded-sm border flex items-center justify-center shrink-0"
+                      key={blog._id}
+                      onClick={() => handleRelatedBlogToggle(blog._id)}
+                      className="flex items-center gap-2 p-2 rounded cursor-pointer transition-colors border"
                       style={{
                         backgroundColor: formData.relatedIds.includes(blog._id)
-                          ? colors.primary
+                          ? colors.primary + "10"
                           : "transparent",
-                        borderColor: colors.primary,
+                        borderColor: formData.relatedIds.includes(blog._id)
+                          ? colors.primary
+                          : colors.accent + "20",
                       }}
                     >
-                      {formData.relatedIds.includes(blog._id) && (
-                        <span className="text-[10px] text-white">✓</span>
-                      )}
+                      <div
+                        className="w-4 h-4 rounded-sm border flex items-center justify-center shrink-0"
+                        style={{
+                          backgroundColor: formData.relatedIds.includes(
+                            blog._id,
+                          )
+                            ? colors.primary
+                            : "transparent",
+                          borderColor: colors.primary,
+                        }}
+                      >
+                        {formData.relatedIds.includes(blog._id) && (
+                          <span className="text-[10px] text-white">✓</span>
+                        )}
+                      </div>
+                      <span
+                        className="text-sm truncate"
+                        style={{ color: colors.text }}
+                      >
+                        {blog.title}
+                      </span>
                     </div>
-                    <span
-                      className="text-xs truncate"
-                      style={{ color: colors.text }}
-                    >
-                      {blog.title}
-                    </span>
-                  </div>
-                ))}
-              {blogs.length <= 1 && (
-                <p
-                  className="text-xs text-center py-4"
-                  style={{ color: colors.textSecondary }}
-                >
-                  No other blogs available to link
-                </p>
-              )}
+                  ))}
+                {blogs.length <= 1 && (
+                  <p
+                    className="text-xs text-center py-4"
+                    style={{ color: colors.textSecondary }}
+                  >
+                    No other blogs available to link
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col sm:flex-row gap-4 pt-4">
             <button
               type="submit"
               disabled={saving}
-              className="w-full py-3 rounded font-bold shadow-lg flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-70 cursor-pointer"
+              className="flex-1 py-4 rounded-xl font-bold shadow-xl flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-70 cursor-pointer"
               style={{
                 backgroundColor: colors.primary,
                 color: colors.background,
               }}
             >
-              {saving ? <Loader size={20} color="#fff" /> : "Update Blog"}
+              {saving ? <Loader size={22} color="#fff" /> : "Update Blog"}
             </button>
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="w-full py-3 rounded font-bold border hover:bg-black/5 transition-all cursor-pointer"
+              className="px-12 py-4 rounded-xl font-bold border-2 hover:bg-black/5 transition-all cursor-pointer"
               style={{ borderColor: colors.accent + "40", color: colors.text }}
             >
               Cancel

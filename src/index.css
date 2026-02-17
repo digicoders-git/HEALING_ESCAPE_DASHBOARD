@@ -69,4 +69,20 @@
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.2);
   }
+
+  /* Jodit Editor List Fix */
+  .jodit-wysiwyg ul {
+    list-style-type: disc !important;
+    padding-left: 2.5rem !important;
+    margin: 1rem 0 !important;
+  }
+  .jodit-wysiwyg ol {
+    list-style-type: decimal !important;
+    padding-left: 2.5rem !important;
+    margin: 1rem 0 !important;
+  }
+  .jodit-wysiwyg li {
+    display: list-item !important;
+    margin-bottom: 0.5rem !important;
+  }
 }
