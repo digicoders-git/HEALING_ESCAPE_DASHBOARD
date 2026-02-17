@@ -15,85 +15,52 @@ const EditBlog = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const config = useMemo(() => ({
-    readonly: false,
-    height: 500,
-    theme: colors.background === "#ffffff" ? "default" : "dark",
-    buttons: [
-      "bold",
-      "italic",
-      "underline",
-      "strikethrough",
-      "|",
-      "ul",
-      "ol",
-      "|",
-      "font",
-      "fontsize",
-      "brush",
-      "paragraph",
-      "|",
-      "image",
-      "video",
-      "table",
-      "link",
-      "|",
-      "align",
-      "undo",
-      "redo",
-      "|",
-      "hr",
-      "eraser",
-      "copyformat",
-      "|",
-      "fullsize",
-      "selectall",
-      "source",
-    ],
-    uploader: {
-      insertImageAsBase64URI: true,
-    },
-    placeholder: "Start typing your blog content...",
-    askBeforePasteFromWord: false,
-    askBeforePasteHTML: false,
-    defaultActionOnPaste: "insert_clear_html",
-    style: {
-      background: colors.background,
-      color: colors.text,
-      fontFamily: "inherit",
-    },
-    imageDefaultWidth: "100%",
-  }), [colors]);
-
-  const customJoditStyles = `
-    .jodit-container {
-      border-color: ${colors.accent}40 !important;
-      background-color: ${colors.background} !important;
-      color: ${colors.text} !important;
-    }
-    .jodit-toolbar__box {
-      background-color: ${colors.sidebar} !important;
-      border-bottom: 1px solid ${colors.accent}30 !important;
-    }
-    .jodit-toolbar-button__button {
-       color: ${colors.text} !important;
-    }
-    .jodit-toolbar-button__button:hover {
-       background-color: ${colors.primary}20 !important;
-    }
-    .jodit-status-bar {
-      background-color: ${colors.sidebar} !important;
-      color: ${colors.textSecondary} !important;
-      border-top: 1px solid ${colors.accent}30 !important;
-    }
-    .jodit-workplace {
-      background-color: ${colors.background} !important;
-      color: ${colors.text} !important;
-    }
-    .jodit-wysiwyg {
-      color: ${colors.text} !important;
-    }
-  `;
+  const config = useMemo(
+    () => ({
+      readonly: false,
+      height: 500,
+      buttons: [
+        "bold",
+        "italic",
+        "underline",
+        "strikethrough",
+        "|",
+        "ul",
+        "ol",
+        "|",
+        "font",
+        "fontsize",
+        "brush",
+        "paragraph",
+        "|",
+        "image",
+        "video",
+        "table",
+        "link",
+        "|",
+        "align",
+        "undo",
+        "redo",
+        "|",
+        "hr",
+        "eraser",
+        "copyformat",
+        "|",
+        "fullsize",
+        "selectall",
+        "source",
+      ],
+      uploader: {
+        insertImageAsBase64URI: true,
+      },
+      placeholder: "Start typing your blog content...",
+      askBeforePasteFromWord: false,
+      askBeforePasteHTML: false,
+      defaultActionOnPaste: "insert_clear_html",
+      imageDefaultWidth: "100%",
+    }),
+    [],
+  );
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -235,7 +202,6 @@ const EditBlog = () => {
 
   return (
     <div className="p-6 min-h-screen">
-      <style>{customJoditStyles}</style>
       <div className="flex items-center gap-4 mb-6">
         <button
           onClick={() => navigate(-1)}
@@ -284,7 +250,7 @@ const EditBlog = () => {
                   style={{
                     backgroundColor: colors.background,
                     borderColor: colors.accent + "40",
-                    color: colors.text,
+                    // color: colors.text,
                   }}
                 />
               </div>
@@ -304,7 +270,7 @@ const EditBlog = () => {
                   style={{
                     backgroundColor: colors.background,
                     borderColor: colors.accent + "40",
-                    color: colors.text,
+                    // color: colors.text,
                   }}
                 />
               </div>
@@ -322,12 +288,12 @@ const EditBlog = () => {
                 value={formData.excerpt}
                 onChange={handleChange}
                 placeholder="Brief summary of the blog"
-                rows={2}
+                rows={8}
                 className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
                 style={{
                   backgroundColor: colors.background,
                   borderColor: colors.accent + "40",
-                  color: colors.text,
+                  // color: colors.text,
                 }}
               />
             </div>
@@ -344,12 +310,12 @@ const EditBlog = () => {
                 value={formData.introduction}
                 onChange={handleChange}
                 placeholder="Introductory paragraph"
-                rows={3}
+                rows={8}
                 className="w-full px-4 py-2.5 rounded border outline-none focus:ring-1 transition-all"
                 style={{
                   backgroundColor: colors.background,
                   borderColor: colors.accent + "40",
-                  color: colors.text,
+                  // color: colors.text,
                 }}
               />
             </div>
@@ -369,7 +335,7 @@ const EditBlog = () => {
                   onBlur={(newContent) =>
                     setFormData((prev) => ({ ...prev, content: newContent }))
                   }
-                  onChange={(newContent) => { }}
+                  onChange={(newContent) => {}}
                 />
               </div>
             </div>

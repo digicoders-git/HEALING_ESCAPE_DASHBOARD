@@ -16,85 +16,52 @@ const AddBlog = () => {
   const [loading, setLoading] = useState(false);
   const [blogs, setBlogs] = useState([]);
 
-  const config = useMemo(() => ({
-    readonly: false,
-    height: 500,
-    theme: colors.background === "#ffffff" ? "default" : "dark",
-    buttons: [
-      "bold",
-      "italic",
-      "underline",
-      "strikethrough",
-      "|",
-      "ul",
-      "ol",
-      "|",
-      "font",
-      "fontsize",
-      "brush",
-      "paragraph",
-      "|",
-      "image",
-      "video",
-      "table",
-      "link",
-      "|",
-      "align",
-      "undo",
-      "redo",
-      "|",
-      "hr",
-      "eraser",
-      "copyformat",
-      "|",
-      "fullsize",
-      "selectall",
-      "source",
-    ],
-    uploader: {
-      insertImageAsBase64URI: true,
-    },
-    placeholder: "Start typing your blog content...",
-    askBeforePasteFromWord: false,
-    askBeforePasteHTML: false,
-    defaultActionOnPaste: "insert_clear_html",
-    style: {
-      background: colors.background,
-      color: colors.text,
-      fontFamily: "inherit",
-    },
-    imageDefaultWidth: "100%",
-  }), [colors]);
-
-  const customJoditStyles = `
-    .jodit-container {
-      border-color: ${colors.accent}40 !important;
-      background-color: ${colors.background} !important;
-      color: ${colors.text} !important;
-    }
-    .jodit-toolbar__box {
-      background-color: ${colors.sidebar} !important;
-      border-bottom: 1px solid ${colors.accent}30 !important;
-    }
-    .jodit-toolbar-button__button {
-       color: ${colors.text} !important;
-    }
-    .jodit-toolbar-button__button:hover {
-       background-color: ${colors.primary}20 !important;
-    }
-    .jodit-status-bar {
-      background-color: ${colors.sidebar} !important;
-      color: ${colors.textSecondary} !important;
-      border-top: 1px solid ${colors.accent}30 !important;
-    }
-    .jodit-workplace {
-      background-color: ${colors.background} !important;
-      color: ${colors.text} !important;
-    }
-    .jodit-wysiwyg {
-      color: ${colors.text} !important;
-    }
-  `;
+  const config = useMemo(
+    () => ({
+      readonly: false,
+      height: 500,
+      buttons: [
+        "bold",
+        "italic",
+        "underline",
+        "strikethrough",
+        "|",
+        "ul",
+        "ol",
+        "|",
+        "font",
+        "fontsize",
+        "brush",
+        "paragraph",
+        "|",
+        "image",
+        "video",
+        "table",
+        "link",
+        "|",
+        "align",
+        "undo",
+        "redo",
+        "|",
+        "hr",
+        "eraser",
+        "copyformat",
+        "|",
+        "fullsize",
+        "selectall",
+        "source",
+      ],
+      uploader: {
+        insertImageAsBase64URI: true,
+      },
+      placeholder: "Start typing your blog content...",
+      askBeforePasteFromWord: false,
+      askBeforePasteHTML: false,
+      defaultActionOnPaste: "insert_clear_html",
+      imageDefaultWidth: "100%",
+    }),
+    [],
+  );
 
   const [formData, setFormData] = useState({
     title: "",
@@ -117,17 +84,6 @@ const AddBlog = () => {
   useEffect(() => {
     fetchBlogs();
   }, []);
-
-  const fetchBlogs = async () => {
-    try {
-      const response = await getBlogs({ limit: 1000 });
-      if (response.success) {
-        setBlogs(response.blogs || []);
-      }
-    } catch (error) {
-      console.error("Error fetching blogs for relatedIds:", error);
-    }
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -200,14 +156,12 @@ const AddBlog = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#f9fafb' }}>
-      <style>{customJoditStyles}</style>
-      
+    <div className="min-h-screen" style={{ backgroundColor: "#f9fafb" }}>
       {/* Premium Gradient Header */}
-      <div 
+      <div
         className="sticky top-0 z-50 shadow-lg"
         style={{
-          background: 'linear-gradient(135deg, #006cb5 0%, #004d84 100%)'
+          background: "linear-gradient(135deg, #006cb5 0%, #004d84 100%)",
         }}
       >
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-6">
@@ -215,15 +169,19 @@ const AddBlog = () => {
             <button
               onClick={() => navigate(-1)}
               className="p-2.5 rounded-xl transition-all hover:scale-110 cursor-pointer"
-              style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#ffffff' }}
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+                color: "#ffffff",
+              }}
             >
               <MdArrowBack size={24} />
             </button>
             <div className="flex-1">
-              <h1 className="text-3xl font-black text-white">
-                Add New Blog
-              </h1>
-              <p className="text-sm mt-1 font-medium" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
+              <h1 className="text-3xl font-black text-white">Add New Blog</h1>
+              <p
+                className="text-sm mt-1 font-medium"
+                style={{ color: "rgba(255, 255, 255, 0.9)" }}
+              >
                 Create a new article for your medical tourism platform
               </p>
             </div>
@@ -239,16 +197,30 @@ const AddBlog = () => {
           {/* Main Content Area */}
           <div className="lg:col-span-2 space-y-6">
             {/* Card */}
-            <div className="bg-white p-8 rounded-2xl shadow-xl border space-y-6" style={{ borderColor: '#e5e7eb' }}>
+            <div
+              className="bg-white p-8 rounded-2xl shadow-xl border space-y-6"
+              style={{ borderColor: "#e5e7eb" }}
+            >
               {/* Section Header */}
-              <div className="flex items-center gap-3 pb-4 border-b-2" style={{ borderColor: '#f1f5f9' }}>
-                <div className="w-1 h-8 rounded-full" style={{ backgroundColor: '#006cb5' }}></div>
-                <h2 className="text-xl font-black" style={{ color: '#1f2937' }}>Blog Content</h2>
+              <div
+                className="flex items-center gap-3 pb-4 border-b-2"
+                style={{ borderColor: "#f1f5f9" }}
+              >
+                <div
+                  className="w-1 h-8 rounded-full"
+                  style={{ backgroundColor: "#006cb5" }}
+                ></div>
+                <h2 className="text-xl font-black" style={{ color: "#1f2937" }}>
+                  Blog Content
+                </h2>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2.5">
-                  <label className="text-sm font-bold" style={{ color: '#1f2937' }}>
+                  <label
+                    className="text-sm font-bold"
+                    style={{ color: "#1f2937" }}
+                  >
                     Title *
                   </label>
                   <input
@@ -259,22 +231,26 @@ const AddBlog = () => {
                     required
                     className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium"
                     style={{
-                      backgroundColor: '#ffffff',
-                      borderColor: '#e5e7eb',
-                      color: '#1f2937',
+                      backgroundColor: "#ffffff",
+                      borderColor: "#e5e7eb",
+                      color: "#1f2937",
                     }}
                     onFocus={(e) => {
-                      e.target.style.borderColor = '#006cb5';
-                      e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                      e.target.style.borderColor = "#006cb5";
+                      e.target.style.boxShadow =
+                        "0 0 0 3px rgba(0, 108, 181, 0.1)";
                     }}
                     onBlur={(e) => {
-                      e.target.style.borderColor = '#e5e7eb';
-                      e.target.style.boxShadow = 'none';
+                      e.target.style.borderColor = "#e5e7eb";
+                      e.target.style.boxShadow = "none";
                     }}
                   />
                 </div>
                 <div className="space-y-2.5">
-                  <label className="text-sm font-bold" style={{ color: '#1f2937' }}>
+                  <label
+                    className="text-sm font-bold"
+                    style={{ color: "#1f2937" }}
+                  >
                     Category *
                   </label>
                   <input
@@ -285,24 +261,28 @@ const AddBlog = () => {
                     required
                     className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium"
                     style={{
-                      backgroundColor: '#ffffff',
-                      borderColor: '#e5e7eb',
-                      color: '#1f2937',
+                      backgroundColor: "#ffffff",
+                      borderColor: "#e5e7eb",
+                      color: "#1f2937",
                     }}
                     onFocus={(e) => {
-                      e.target.style.borderColor = '#006cb5';
-                      e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                      e.target.style.borderColor = "#006cb5";
+                      e.target.style.boxShadow =
+                        "0 0 0 3px rgba(0, 108, 181, 0.1)";
                     }}
                     onBlur={(e) => {
-                      e.target.style.borderColor = '#e5e7eb';
-                      e.target.style.boxShadow = 'none';
+                      e.target.style.borderColor = "#e5e7eb";
+                      e.target.style.boxShadow = "none";
                     }}
                   />
                 </div>
               </div>
 
               <div className="space-y-2.5">
-                <label className="text-sm font-bold" style={{ color: '#1f2937' }}>
+                <label
+                  className="text-sm font-bold"
+                  style={{ color: "#1f2937" }}
+                >
                   Excerpt (Short Description) *
                 </label>
                 <textarea
@@ -314,23 +294,27 @@ const AddBlog = () => {
                   required
                   className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium resize-none"
                   style={{
-                    backgroundColor: '#ffffff',
-                    borderColor: '#e5e7eb',
-                    color: '#1f2937',
+                    backgroundColor: "#ffffff",
+                    borderColor: "#e5e7eb",
+                    color: "#1f2937",
                   }}
                   onFocus={(e) => {
-                    e.target.style.borderColor = '#006cb5';
-                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                    e.target.style.borderColor = "#006cb5";
+                    e.target.style.boxShadow =
+                      "0 0 0 3px rgba(0, 108, 181, 0.1)";
                   }}
                   onBlur={(e) => {
-                    e.target.style.borderColor = '#e5e7eb';
-                    e.target.style.boxShadow = 'none';
+                    e.target.style.borderColor = "#e5e7eb";
+                    e.target.style.boxShadow = "none";
                   }}
                 />
               </div>
 
               <div className="space-y-2.5">
-                <label className="text-sm font-bold" style={{ color: '#1f2937' }}>
+                <label
+                  className="text-sm font-bold"
+                  style={{ color: "#1f2937" }}
+                >
                   Introduction *
                 </label>
                 <textarea
@@ -342,40 +326,50 @@ const AddBlog = () => {
                   required
                   className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium resize-none"
                   style={{
-                    backgroundColor: '#ffffff',
-                    borderColor: '#e5e7eb',
-                    color: '#1f2937',
+                    backgroundColor: "#ffffff",
+                    borderColor: "#e5e7eb",
+                    color: "#1f2937",
                   }}
                   onFocus={(e) => {
-                    e.target.style.borderColor = '#006cb5';
-                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                    e.target.style.borderColor = "#006cb5";
+                    e.target.style.boxShadow =
+                      "0 0 0 3px rgba(0, 108, 181, 0.1)";
                   }}
                   onBlur={(e) => {
-                    e.target.style.borderColor = '#e5e7eb';
-                    e.target.style.boxShadow = 'none';
+                    e.target.style.borderColor = "#e5e7eb";
+                    e.target.style.boxShadow = "none";
                   }}
                 />
               </div>
 
               <div className="space-y-2.5">
-                <label className="text-sm font-bold" style={{ color: '#1f2937' }}>
+                <label
+                  className="text-sm font-bold"
+                  style={{ color: "#1f2937" }}
+                >
                   Content *
                 </label>
-                <div className="min-h-[400px] rounded-xl overflow-hidden border-2" style={{ borderColor: '#e5e7eb' }}>
-                <JoditEditor
-                  ref={editor}
-                  value={formData.content}
-                  config={config}
-                  onBlur={(newContent) =>
-                    setFormData((prev) => ({ ...prev, content: newContent }))
-                  }
-                  onChange={(newContent) => { }}
-                />
+                <div
+                  className="min-h-[400px] rounded-xl overflow-hidden border-2"
+                  style={{ borderColor: "#e5e7eb" }}
+                >
+                  <JoditEditor
+                    ref={editor}
+                    value={formData.content}
+                    config={config}
+                    onBlur={(newContent) =>
+                      setFormData((prev) => ({ ...prev, content: newContent }))
+                    }
+                    onChange={(newContent) => {}}
+                  />
+                </div>
               </div>
-            </div>
 
               <div className="space-y-2.5">
-                <label className="text-sm font-bold" style={{ color: '#1f2937' }}>
+                <label
+                  className="text-sm font-bold"
+                  style={{ color: "#1f2937" }}
+                >
                   Why This Matters
                 </label>
                 <textarea
@@ -386,17 +380,18 @@ const AddBlog = () => {
                   rows={2}
                   className="w-full px-4 py-3.5 rounded-xl border-2 outline-none transition-all font-medium resize-none"
                   style={{
-                    backgroundColor: '#ffffff',
-                    borderColor: '#e5e7eb',
-                    color: '#1f2937',
+                    backgroundColor: "#ffffff",
+                    borderColor: "#e5e7eb",
+                    color: "#1f2937",
                   }}
                   onFocus={(e) => {
-                    e.target.style.borderColor = '#006cb5';
-                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 108, 181, 0.1)';
+                    e.target.style.borderColor = "#006cb5";
+                    e.target.style.boxShadow =
+                      "0 0 0 3px rgba(0, 108, 181, 0.1)";
                   }}
                   onBlur={(e) => {
-                    e.target.style.borderColor = '#e5e7eb';
-                    e.target.style.boxShadow = 'none';
+                    e.target.style.borderColor = "#e5e7eb";
+                    e.target.style.boxShadow = "none";
                   }}
                 />
               </div>
@@ -406,104 +401,134 @@ const AddBlog = () => {
           {/* Sidebar Space */}
           <div className="space-y-6">
             {/* Image Upload */}
-            <div className="bg-white p-6 rounded-2xl shadow-xl border space-y-4" style={{ borderColor: '#e5e7eb' }}>
-              <div className="flex items-center gap-3 pb-3 border-b-2" style={{ borderColor: '#f1f5f9' }}>
-                <div className="w-1 h-6 rounded-full" style={{ backgroundColor: '#006cb5' }}></div>
-                <h3 className="text-lg font-black" style={{ color: '#1f2937' }}>Blog Image</h3>
-              </div>
             <div
-              className="relative aspect-video rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer overflow-hidden group hover:border-primary/50 transition-all"
-              style={{ borderColor: '#bae6fd', backgroundColor: '#f0f9ff' }}
-              onClick={() => document.getElementById("image-upload").click()}
+              className="bg-white p-6 rounded-2xl shadow-xl border space-y-4"
+              style={{ borderColor: "#e5e7eb" }}
             >
-              {imagePreview ? (
-                <>
-                  <img
-                    src={imagePreview}
-                    className="w-full h-full object-cover"
-                    alt="Preview"
-                  />
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="text-center">
-                      <MdCloudUpload className="text-white mx-auto mb-2" size={40} />
-                      <p className="text-white text-sm font-bold">Change Image</p>
+              <div
+                className="flex items-center gap-3 pb-3 border-b-2"
+                style={{ borderColor: "#f1f5f9" }}
+              >
+                <div
+                  className="w-1 h-6 rounded-full"
+                  style={{ backgroundColor: "#006cb5" }}
+                ></div>
+                <h3 className="text-lg font-black" style={{ color: "#1f2937" }}>
+                  Blog Image
+                </h3>
+              </div>
+              <div
+                className="relative aspect-video rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer overflow-hidden group hover:border-primary/50 transition-all"
+                style={{ borderColor: "#bae6fd", backgroundColor: "#f0f9ff" }}
+                onClick={() => document.getElementById("image-upload").click()}
+              >
+                {imagePreview ? (
+                  <>
+                    <img
+                      src={imagePreview}
+                      className="w-full h-full object-cover"
+                      alt="Preview"
+                    />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <div className="text-center">
+                        <MdCloudUpload
+                          className="text-white mx-auto mb-2"
+                          size={40}
+                        />
+                        <p className="text-white text-sm font-bold">
+                          Change Image
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <MdCloudUpload
-                    size={48}
-                    style={{ color: '#006cb5' }}
-                    className="group-hover:scale-110 transition-transform"
-                  />
-                  <span className="text-sm mt-2 font-semibold" style={{ color: '#6b7280' }}>
-                    Click to upload image
-                  </span>
-                </>
-              )}
-              <input
-                id="image-upload"
-                type="file"
-                hidden
-                accept="image/*"
-                onChange={handleImageChange}
-              />
+                  </>
+                ) : (
+                  <>
+                    <MdCloudUpload
+                      size={48}
+                      style={{ color: "#006cb5" }}
+                      className="group-hover:scale-110 transition-transform"
+                    />
+                    <span
+                      className="text-sm mt-2 font-semibold"
+                      style={{ color: "#6b7280" }}
+                    >
+                      Click to upload image
+                    </span>
+                  </>
+                )}
+                <input
+                  id="image-upload"
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </div>
             </div>
-          </div>
 
             {/* Related Blogs */}
-            <div className="bg-white p-6 rounded-2xl shadow-xl border space-y-4" style={{ borderColor: '#e5e7eb' }}>
-              <div className="flex items-center gap-3 pb-3 border-b-2" style={{ borderColor: '#f1f5f9' }}>
-                <div className="w-1 h-6 rounded-full" style={{ backgroundColor: '#006cb5' }}></div>
-                <h3 className="text-lg font-black" style={{ color: '#1f2937' }}>Related Blogs</h3>
-              </div>
-            <div className="max-h-60 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
-              {blogs.map((blog) => (
+            <div
+              className="bg-white p-6 rounded-2xl shadow-xl border space-y-4"
+              style={{ borderColor: "#e5e7eb" }}
+            >
+              <div
+                className="flex items-center gap-3 pb-3 border-b-2"
+                style={{ borderColor: "#f1f5f9" }}
+              >
                 <div
-                  key={blog._id}
-                  onClick={() => handleRelatedBlogToggle(blog._id)}
-                  className="flex items-center gap-2 p-2 rounded cursor-pointer transition-colors border"
-                  style={{
-                    backgroundColor: formData.relatedIds.includes(blog._id)
-                      ? colors.primary + "10"
-                      : "transparent",
-                    borderColor: formData.relatedIds.includes(blog._id)
-                      ? colors.primary
-                      : colors.accent + "20",
-                  }}
-                >
+                  className="w-1 h-6 rounded-full"
+                  style={{ backgroundColor: "#006cb5" }}
+                ></div>
+                <h3 className="text-lg font-black" style={{ color: "#1f2937" }}>
+                  Related Blogs
+                </h3>
+              </div>
+              <div className="max-h-60 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+                {blogs.map((blog) => (
                   <div
-                    className="w-4 h-4 rounded-sm border flex items-center justify-center shrink-0"
+                    key={blog._id}
+                    onClick={() => handleRelatedBlogToggle(blog._id)}
+                    className="flex items-center gap-2 p-2 rounded cursor-pointer transition-colors border"
                     style={{
                       backgroundColor: formData.relatedIds.includes(blog._id)
-                        ? colors.primary
+                        ? colors.primary + "10"
                         : "transparent",
-                      borderColor: colors.primary,
+                      borderColor: formData.relatedIds.includes(blog._id)
+                        ? colors.primary
+                        : colors.accent + "20",
                     }}
                   >
-                    {formData.relatedIds.includes(blog._id) && (
-                      <span className="text-[10px] text-white">✓</span>
-                    )}
+                    <div
+                      className="w-4 h-4 rounded-sm border flex items-center justify-center shrink-0"
+                      style={{
+                        backgroundColor: formData.relatedIds.includes(blog._id)
+                          ? colors.primary
+                          : "transparent",
+                        borderColor: colors.primary,
+                      }}
+                    >
+                      {formData.relatedIds.includes(blog._id) && (
+                        <span className="text-[10px] text-white">✓</span>
+                      )}
+                    </div>
+                    <span
+                      className="text-xs truncate"
+                      style={{ color: colors.text }}
+                    >
+                      {blog.title}
+                    </span>
                   </div>
-                  <span
-                    className="text-xs truncate"
-                    style={{ color: colors.text }}
+                ))}
+                {blogs.length === 0 && (
+                  <p
+                    className="text-xs text-center py-4"
+                    style={{ color: colors.textSecondary }}
                   >
-                    {blog.title}
-                  </span>
-                </div>
-              ))}
-              {blogs.length === 0 && (
-                <p
-                  className="text-xs text-center py-4"
-                  style={{ color: colors.textSecondary }}
-                >
-                  No blogs available to link
-                </p>
-              )}
+                    No blogs available to link
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
 
             {/* Actions */}
             <div className="flex flex-col gap-3">
@@ -512,8 +537,8 @@ const AddBlog = () => {
                 disabled={loading}
                 className="w-full py-4 rounded-xl font-bold shadow-xl flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-70 cursor-pointer"
                 style={{
-                  backgroundColor: '#1db64c',
-                  color: '#ffffff',
+                  backgroundColor: "#1db64c",
+                  color: "#ffffff",
                 }}
               >
                 {loading ? (
@@ -529,7 +554,7 @@ const AddBlog = () => {
                 type="button"
                 onClick={() => navigate(-1)}
                 className="w-full py-4 rounded-xl font-bold border-2 hover:bg-gray-50 transition-all cursor-pointer"
-                style={{ borderColor: '#e5e7eb', color: '#6b7280' }}
+                style={{ borderColor: "#e5e7eb", color: "#6b7280" }}
               >
                 Cancel
               </button>
