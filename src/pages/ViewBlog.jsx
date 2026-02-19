@@ -11,6 +11,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Loader from "../components/ui/Loader";
+import DOMPurify from "dompurify";
 
 const ViewBlog = () => {
   const { colors } = useTheme();
@@ -35,7 +36,7 @@ const ViewBlog = () => {
           const allBlogsRes = await getBlogs({ limit: 1000 });
           if (allBlogsRes.success) {
             const related = allBlogsRes.blogs.filter((b) =>
-              response.blog.relatedIds.includes(b._id)
+              response.blog.relatedIds.includes(b._id),
             );
             setRelatedBlogs(related);
           }
@@ -210,11 +211,12 @@ const ViewBlog = () => {
                     Full Content
                   </label>
                   <div
-                    className="whitespace-pre-wrap leading-relaxed space-y-4"
-                    style={{ color: colors.text }}
-                  >
-                    {blog.content}
-                  </div>
+                    className="jodit-wysiwyg leading-relaxed space-y-4 min-h-[200px]"
+                    style={{ color: "#1e293b" }}
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(blog.content),
+                    }}
+                  ></div>
                 </section>
 
                 <section className="p-4 rounded-lg bg-black/5">
