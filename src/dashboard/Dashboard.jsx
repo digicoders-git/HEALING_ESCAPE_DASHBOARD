@@ -14,6 +14,7 @@ import {
   MdOutlineVideoLibrary,
   MdQuestionAnswer,
   MdBusiness,
+  MdOutlineWork,
 } from "react-icons/md";
 
 import { Clock } from "./Clock";
@@ -74,6 +75,11 @@ const Dashboard = () => {
       name: "Enquiry",
       icon: MdQuestionAnswer,
       path: "/dashboard/enquiry",
+    },
+    {
+      name: "Careers",
+      icon: MdOutlineWork,
+      path: "/dashboard/career",
     },
     {
       name: "CRM",

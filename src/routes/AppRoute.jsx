@@ -33,6 +33,8 @@ import ViewEmployee from "../pages/ViewEmployee";
 import ManageLeads from "../pages/ManageLeads";
 import ViewLead from "../pages/ViewLead";
 import FollowUps from "../pages/FollowUps";
+import CareersAdmin from "../pages/CareersAdmin";
+import ViewCareer from "../pages/ViewCareer";
 
 export const AppRoute = [
   { path: "profile", component: Profile },
@@ -70,4 +72,6 @@ export const AppRoute = [
   { path: "manage-leads", component: ManageLeads },
   { path: "manage-leads/view/:id", component: ViewLead },
   { path: "follow-ups", component: FollowUps },
+  { path: "career", component: CareersAdmin },
+  { path: "career/view/:id", component: ViewCareer },
 ];
