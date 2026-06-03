@@ -154,6 +154,14 @@ const ViewCareer = () => {
           {data.formType === "global_ambassador" && (
             <>
               <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Age</h3>
+                <p className="text-base font-medium text-slate-800 pt-1">{data.age || "—"}</p>
+              </div>
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Gender</h3>
+                <p className="text-base font-medium text-slate-800 pt-1 uppercase">{data.gender || "—"}</p>
+              </div>
+              <div>
                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Occupation / Profession</h3>
                 <p className="text-base font-medium text-slate-800 pt-1">{data.occupation || "—"}</p>
               </div>
@@ -165,6 +173,12 @@ const ViewCareer = () => {
                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Languages Known</h3>
                 <p className="text-base font-medium text-slate-800 pt-1">{data.languagesKnown || "—"}</p>
               </div>
+              {data.education?.diploma && (
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Diplomas / Certificates</h3>
+                  <p className="text-base font-medium text-slate-800 pt-1">{data.education.diploma}</p>
+                </div>
+              )}
             </>
           )}
 
@@ -271,6 +285,23 @@ const ViewCareer = () => {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Why Join (Motivation) Block */}
+        {data.whyJoin && (
+          <div className="mt-8 border-t pt-8">
+            <h2 className="text-lg font-bold text-slate-700 uppercase tracking-wider mb-4">
+              Motivation to Join
+            </h2>
+            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                Why do you want to join Healing Escape Global as a Global Ambassador?
+              </h3>
+              <p className="text-sm font-medium text-slate-800 leading-relaxed whitespace-pre-wrap">
+                {data.whyJoin}
+              </p>
             </div>
           </div>
         )}
